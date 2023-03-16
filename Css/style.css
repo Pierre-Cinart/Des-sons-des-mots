@@ -81,6 +81,7 @@ body {
   width: 128px;
   height: 128px;
   border: 1px solid yellow;
+  border-radius: 50%;
 }
 
 #_sounds img:hover {
