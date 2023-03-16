@@ -85,26 +85,24 @@ body{
 }
 
 
-#_images{
+#_sounds{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    flex-direction: column;
-    gap: 10px;
     width: 90%;
-    height: 50vh;
+    height: 60vh;
     margin: auto;
     margin-top: 5px;
     margin-bottom: 5px;
     border: $imgBorderStyle;
 }
-#_images img{
+#_sounds img{
     width: 128px;
     height: 128px;
     border: $imgBorderStyle;
 }
-#_images img:hover{
+#_sounds img:hover{
     width: 128px;
     height: 128px;
     border: $imgHoverBorderStyle;
