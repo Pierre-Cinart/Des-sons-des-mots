@@ -8,6 +8,9 @@
 const infoBar = document.querySelector('#infoBar');
 const menu = document.querySelector('#menu');
 const _images = document.querySelector('#_images');
-const letterEmpty = document.querySelector('#letterEmpty');
+const lettersEmpty = document.querySelector('#lettersEmpty');
 const letters = document.querySelector('#letters');
 
+function newGame(){
+    menu.classList.toggle('displayNone');
+}

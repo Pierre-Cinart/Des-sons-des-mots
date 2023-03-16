@@ -13,6 +13,8 @@ $screenHeight : 100vh;
 $screenBgColor : black;
 // config #images
 $imgBorderStyle : 1px solid yellow;
+$imgHoverBorderStyle : 1px solid green;
+
 *{
     margin: 0px;
     padding: 0px;
@@ -24,6 +26,7 @@ body{
     width: 100%;
     height: 100vh;
     background-color: $bodyBgColor;
+    overflow: hidden;
 }
 
 #infoBar{
@@ -34,11 +37,18 @@ body{
 }
 
 #menu{
-    width: 100%;
+    width: 90%;
+    height: 300px;
     position: absolute;
     top:30%;
-    
+    left:5%;
+    background-color: rgba(52, 61, 60, 0.888);
+    border-radius: 20%;
+    border: 1px solid white;
     text-align: center;
+}
+#menu h1{
+    margin: 30px auto 10px auto;
 }
 ._btn{
     
@@ -66,19 +76,22 @@ body{
 }
 
 #_screen {
+   
     width: $screenWidth;
     height: $screenHeight;
     margin: auto;
-    
     border: $btnBorderStyle;
     background-color: $screenBgColor;
-
 }
+
 
 #_images{
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
+    gap: 10px;
     width: 90%;
     height: 50vh;
     margin: auto;
@@ -86,6 +99,57 @@ body{
     margin-bottom: 5px;
     border: $imgBorderStyle;
 }
+#_images img{
+    width: 128px;
+    height: 128px;
+    border: $imgBorderStyle;
+}
+#_images img:hover{
+    width: 128px;
+    height: 128px;
+    border: $imgHoverBorderStyle;
+}
+
+#lettersEmpty{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 30px;
+    margin: 10px auto ;
+    background-color: yellow;
+    border-radius: 20%;
+}
+#lettersEmpty p{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: wheat;
+    font-weight: 900;
+}
+#letters{
+    width: 75%;
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+}
+#letters p{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: wheat;
+    border: $imgBorderStyle;
+    border-radius: 10%;
+}
+
 
 .displayNone{
     display: none;
