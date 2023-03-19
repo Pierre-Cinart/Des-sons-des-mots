@@ -29,14 +29,14 @@ body{
     overflow: hidden;
 }
 
-#infoBar{
+#infoBar {
     width: 100%;
     height: auto;
     background-color: black;
     color: yellow;
 }
 
-#menu{
+#menu {
     width: 90%;
     height: 300px;
     position: absolute;
@@ -47,11 +47,12 @@ body{
     border: 1px solid white;
     text-align: center;
 }
-#menu h1{
+
+#menu h1 {
     margin: 30px auto 10px auto;
 }
-._btn{
-    
+
+._btn {  
     margin: auto;
     margin-bottom: $btnGap;
     display: flex;
@@ -65,18 +66,15 @@ body{
     background-color: $btnBgColor;
     border: $btnBorderStyle;  
     scale: 0.95;
-    transition-duration: 0.25s;
-    
+    transition-duration: 0.25s;    
 }
 
-._btn:hover{
+._btn:hover {
     scale: 1;
     transition-duration: 0.25s;
-   
 }
 
 #_screen {
-   
     width: $screenWidth;
     height: $screenHeight;
     margin: auto;
@@ -84,8 +82,7 @@ body{
     background-color: $screenBgColor;
 }
 
-
-#_sounds{
+#_sounds {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -96,39 +93,41 @@ body{
     margin-top: 5px;
     margin-bottom: 5px;
     border: $imgBorderStyle;
-}
-#_sounds img{
-    width: 128px;
-    height: 128px;
-    border: $imgBorderStyle;
-    border-radius: 50%;
-}
-#_sounds img:hover{
-    width: 128px;
-    height: 128px;
-    border: $imgHoverBorderStyle;
+    img {
+        width: 128px;
+        height: 128px;
+        border: $imgBorderStyle;
+        border-radius: 50%;
+    }
+    img:hover {
+        width: 128px;
+        height: 128px;
+        border: $imgHoverBorderStyle;
+    }
 }
 
-#lettersEmpty{
+#lettersEmpty {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 2px;
     width: 90%;
     height: 30px;
     margin: 10px auto ;
     background-color: yellow;
     border-radius: 20%;
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background-color: wheat;
+        font-weight: 900;
+    }
 }
-#lettersEmpty p{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background-color: wheat;
-    font-weight: 900;
-}
-#letters{
+
+#letters {
     width: 75%;
     margin: 40px auto;
     display: flex;
@@ -137,19 +136,18 @@ body{
     align-items: center;
     gap: 5px;
     text-align: center;
-}
-#letters p{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background-color: wheat;
-    border: $imgBorderStyle;
-    border-radius: 10%;
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background-color: wheat;
+        border: $imgBorderStyle;
+        border-radius: 10%;
+    }
 }
 
-
-.displayNone{
+.displayNone {
     display: none;
 }

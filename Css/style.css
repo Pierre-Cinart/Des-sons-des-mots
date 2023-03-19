@@ -76,14 +76,12 @@ body {
   margin-bottom: 5px;
   border: 1px solid yellow;
 }
-
 #_sounds img {
   width: 128px;
   height: 128px;
   border: 1px solid yellow;
   border-radius: 50%;
 }
-
 #_sounds img:hover {
   width: 128px;
   height: 128px;
@@ -94,13 +92,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 2px;
   width: 90%;
   height: 30px;
   margin: 10px auto;
   background-color: yellow;
   border-radius: 20%;
 }
-
 #lettersEmpty p {
   display: flex;
   align-items: center;
@@ -121,7 +119,6 @@ body {
   gap: 5px;
   text-align: center;
 }
-
 #letters p {
   display: flex;
   align-items: center;
