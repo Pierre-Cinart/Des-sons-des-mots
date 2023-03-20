@@ -41,7 +41,8 @@ let lettersToTest = [];
 //FONCTIONS
 function init(){
      //initialisation de la liste de mots possible
-     words = ['abeille','avion' ,'canard','cusine', 'dauphin', 'dinde','ferme' ,'hymne','oie'];
+     words = ['abeille','avion' ,'bagarre','canard','cartoon','cochon','cuisine', 'dauphin', 'dinde',
+     'enfant','ferme' ,'hymne','monstre','oie'];
      console.log('init');
       //efface le menu
     menu.classList.toggle('displayNone');
