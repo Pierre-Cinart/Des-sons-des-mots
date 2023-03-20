@@ -34,24 +34,33 @@ let theme ='';
 let words = [];
 let word = '';
 let wordFind = '';
+let lettersToTest = [];
 
 //
 
 //FONCTIONS
-
+function init(){
+     //initialisation de la liste de mots possible
+     words = ['abeille','avion' ,'canard','cusine', 'dauphin', 'dinde','ferme' ,'hymne','oie'];
+     console.log('init');
+      //efface le menu
+    menu.classList.toggle('displayNone');
+}
 //LANCER UNE NOUVELLE PARTIE
 function newGame(){
-
-    //efface le menu
-    menu.classList.toggle('displayNone');
+   
+    if (!game){
+        init();
+    }
+    console.log('newGame')
+   
 
 ///////// test de fonctionalités post développement //////////
-    //initialisation de la liste de mots possible
-    words = ['abeille', 'canard', 'dauphin', 'dinde','ferme' ,'hymne','oie'];
+   
 
     // selection d un mot aleatoire
     word = randomWord(words);
-    console.log('mot ' + word);
+   
 
     //affectation de la place des lettres parmis les lettres cliquables
     placeLetters();
@@ -65,6 +74,7 @@ function newGame(){
         let p = document.createElement('p');
         p.textContent = '*'
         p.className = 'letter';
+        p.setAttribute('onclick','clickLetter(this)');
         for ( let j = 0 ; j < randomList.length ; j++ ){
             if ( i == randomList[j]){
                 p.textContent = word[j].toUpperCase();
@@ -73,7 +83,7 @@ function newGame(){
         if (p.textContent == '*') {
             p.textContent = randomLetter();
         }
-        
+       
         letters.appendChild(p);
     }
     
@@ -84,15 +94,19 @@ function newGame(){
         let p = document.createElement('p');
         p.className = 'letterEmpty';
         p.textContent = '_'
+        p.setAttribute('onclick','resetLetter(this)')
         lettersEmpty.appendChild(p);
     }
-
+   
     // lance le jeu 
     game = true; 
 }
 
 // PLACE LES LETTRES PARMIS LES LETTRES CLIQUABLES 
 function placeLetters(){
+    randomList = null;
+    
+    randomList = []
     let maxRandom = [];
    for (let i = 0 ; i < maxLetters ; i++) {
         maxRandom[i] = i;
@@ -102,14 +116,14 @@ function placeLetters(){
         randomList[i] = maxRandom[rdm]
         maxRandom.splice(rdm,1);
    }
-   console.log('rdm lst : ' + randomList)
+   
 }
 
 //selectionne un mot dans la liste l affecte à word et le supprime de la liste
 function randomWord(_list) {
     let str = ''
     rdm = Math.trunc(Math.random() * _list.length);
-    console.log('rdm :' + rdm)
+   
     str = _list[rdm];
     _list.splice(rdm,1);
     return str;
@@ -130,3 +144,68 @@ function playSound(nb){
     } else { return; }  
 }
 
+function clickLetter(letter){
+
+for (let i = 0; i < lettersEmpty.children.length; i++) {
+    if ( lettersEmpty.children[i].textContent == '_' && letter.textContent!=' '){
+        lettersEmpty.children[i].textContent = letter.textContent;
+        letter.textContent = ' ';
+        if (i == lettersEmpty.children.length -1){
+            testWord();
+        }
+        return;
+    }
+   
+}
+
+}
+
+function resetLetter(letter){
+    if (letter.textContent!='_'){
+        for (let i = 0 ; i < letters.children.length ; i ++){
+            if (letters.children[i].textContent == ' '){
+                letters.children[i].textContent = letter.textContent;
+                letter.textContent = '_';
+                return;
+            }
+        }
+    }    
+}
+
+function testWord(){
+    let good = true;
+    for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
+        if (lettersEmpty.children[i].textContent != word[i].toUpperCase()){
+            good = false;
+        }
+    }
+    if (good){
+        for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
+                lettersEmpty.children[i].style.backgroundColor = 'green';
+                
+            }
+    }
+    else {
+        for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
+            lettersEmpty.children[i].style.backgroundColor = 'red';
+        }
+    }
+    if (good){
+        while (letters.firstChild) {
+            letters.removeChild(letters.firstChild);
+          }
+          while (lettersEmpty.firstChild) {
+            lettersEmpty.removeChild(lettersEmpty.firstChild);
+          }
+          audio.pause();
+          audio.currentTime = 0;
+          console.log('L : '+ words.length)
+        if ( words.length >= 1){
+            setTimeout(newGame(),2000);
+        }
+        else{
+            console.log('fini')
+        }
+        
+    }
+}
