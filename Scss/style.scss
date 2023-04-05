@@ -19,11 +19,14 @@ $imgHoverBorderStyle : 1px solid green;
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    user-select: none;
 }
 
 body{
+
     position: relative;
     width: 100%;
+    min-width: 290px;
     height: 100vh;
     background-color: $bodyBgColor;
     overflow: hidden;
@@ -41,7 +44,8 @@ body{
     height: 300px;
     position: absolute;
     top:30%;
-    left:5%;
+    left:50%;
+    transform: translate(-50%,0%);
     background-color: rgba(52, 61, 60, 0.888);
     border-radius: 20%;
     border: 1px solid white;
@@ -80,6 +84,7 @@ body{
     margin: auto;
     border: $btnBorderStyle;
     background-color: $screenBgColor;
+    min-width: 290px;
 }
 
 #_sounds {
@@ -88,6 +93,8 @@ body{
     justify-content: space-around;
     align-items: center;
     width: 90%;
+    min-width: 290px;
+    max-width: 680px;
     height: 60vh;
     margin: auto;
     margin-top: 5px;
@@ -107,11 +114,13 @@ body{
 }
 
 #lettersEmpty {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2px;
     width: 90%;
+    max-width: 400px;
     height: 30px;
     margin: 10px auto ;
     background-color: yellow;
@@ -128,7 +137,9 @@ body{
 }
 
 #letters {
+    cursor: pointer;
     width: 75%;
+    max-width: 230px;
     margin: 40px auto;
     display: flex;
     justify-content: center;
@@ -147,7 +158,10 @@ body{
         border-radius: 10%;
     }
 }
-
+#menu{
+    max-width: 400px;
+    
+}
 .displayNone {
     display: none;
 }

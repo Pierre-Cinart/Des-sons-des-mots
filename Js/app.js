@@ -6,21 +6,24 @@
 // developper une logique de placement pour les lettres
 
 // RECUPERATION ELEMENTS DU DOM
-const infoBar = document.querySelector('#infoBar');
-const menu = document.querySelector('#menu');
-const sounds = document.querySelector('#sounds');
-const lettersEmpty = document.querySelector('#lettersEmpty');
-const letters = document.querySelector('#letters');
+const infoBar = document.querySelector('#infoBar')
+const menu = document.querySelector('#menu')
+const sounds = document.querySelector('#sounds')
+const lettersEmpty = document.querySelector('#lettersEmpty')
+const letters = document.querySelector('#letters')
 //
 // VARIABLES AUDIO
-let audio = new Audio();
-let audioSources = [];
+let audio = new Audio()
+let audioTxt = ''
+let isPlaying = false
+let fx = new Audio()
+let audioSources = []
 //
 // VARIABLE ENVIRONEMENT
-const maxLetters = 12;
+const maxLetters = 12
 
-let randomList = [];
-let game = false;
+let randomList = []
+let game = false
 const alphabet = ['A','A','A','B','C','C','C',
                     'D','E','E','E','F','G','H',
                     'I','I','S','J','K','L','A','L',
@@ -31,8 +34,8 @@ const alphabet = ['A','A','A','B','C','C','C',
                     'L','L','D','E','A','N','R','F','G',
                     'Q','R','S','K','L','A','L','N','R','F','W'];
 let theme ='';
-let words = [];
-let word = '';
+let words = [];//tableau des mots 
+let word = '';//mot à trouver
 let wordFind = '';
 let lettersToTest = [];
 
@@ -40,22 +43,30 @@ let lettersToTest = [];
 
 //FONCTIONS
 function init(){
-     //initialisation de la liste de mots possible
+        fx.src="./Audio/fx/click.mp3"
+     //initialisation de la liste de mots possible 
      words = ['abeille','avion' ,'bagarre','canard','cartoon','cochon','cuisine', 'dauphin', 'dinde',
-     'enfant','ferme' ,'hymne','monstre','oie'];
-     console.log('init');
+     'enfant','ferme' ,'hymne','monstre','oie']
+     console.log('init')
       //efface le menu
-    menu.classList.toggle('displayNone');
+    menu.classList.toggle('displayNone')
 }
 //LANCER UNE NOUVELLE PARTIE
 function newGame(){
    
     if (!game){
-        init();
+        init()
     }
     console.log('newGame')
    
-
+    while (letters.firstChild) {
+        letters.removeChild(letters.firstChild);
+      }
+      while (lettersEmpty.firstChild) {
+        lettersEmpty.removeChild(lettersEmpty.firstChild);
+      }
+      audio.pause();
+      audio.currentTime = 0;
 ///////// test de fonctionalités post développement //////////
    
 
@@ -75,7 +86,7 @@ function newGame(){
         let p = document.createElement('p');
         p.textContent = '*'
         p.className = 'letter';
-        p.setAttribute('onclick','clickLetter(this)');
+        p.setAttribute('onclick','clickLetter(this)');//attribut la fonction clickLetter sur la case
         for ( let j = 0 ; j < randomList.length ; j++ ){
             if ( i == randomList[j]){
                 p.textContent = word[j].toUpperCase();
@@ -138,15 +149,31 @@ function randomLetter(){
 // JOUER LE SON // 
 function playSound(nb){
     if (game){
-        audio.pause();
-        audio.currentTime = 0;
-        audio.src = audioSources[nb];
-        audio.play();
+        if (audioTxt != audioSources[nb] ) {
+            audio.currentTime = 0
+            audio.src = audioSources[nb]
+            audio.play()
+            audioTxt = audioSources[nb]
+            console.log('txt : ' + audioTxt)
+            isPlaying = true
+            
+        } else if (audioTxt == audioSources[nb] && isPlaying) {
+            audio.pause()
+            isPlaying = false
+            console.log('pause')
+        } 
+        else if (!isPlaying) {
+            audio.play()
+            isPlaying = true
+            console.log('continue')
+        }
+        
     } else { return; }  
 }
 
 function clickLetter(letter){
-
+fx.currentTime = 0
+fx.play()
 for (let i = 0; i < lettersEmpty.children.length; i++) {
     if ( lettersEmpty.children[i].textContent == '_' && letter.textContent!=' '){
         lettersEmpty.children[i].textContent = letter.textContent;
@@ -185,28 +212,22 @@ function testWord(){
                 lettersEmpty.children[i].style.backgroundColor = 'green';
                 
             }
+            if ( words.length >= 1){
+                setTimeout(newGame,2000);
+            }
+            else{
+                console.log('fini')
+            }
+            
     }
     else {
         for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
             lettersEmpty.children[i].style.backgroundColor = 'red';
         }
     }
-    if (good){
-        while (letters.firstChild) {
-            letters.removeChild(letters.firstChild);
-          }
-          while (lettersEmpty.firstChild) {
-            lettersEmpty.removeChild(lettersEmpty.firstChild);
-          }
-          audio.pause();
-          audio.currentTime = 0;
-          console.log('L : '+ words.length)
-        if ( words.length >= 1){
-            setTimeout(newGame(),2000);
-        }
-        else{
-            console.log('fini')
-        }
-        
-    }
+  
+}
+
+function pauseSound(snd){
+    snd.pause();
 }
