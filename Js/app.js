@@ -7,6 +7,7 @@
 
 // RECUPERATION ELEMENTS DU DOM
 const infoBar = document.querySelector('#infoBar')
+const infoTxt = document.querySelector('#infoTxt')
 const menu = document.querySelector('#menu')
 const sounds = document.querySelector('#sounds')
 const lettersEmpty = document.querySelector('#lettersEmpty')
@@ -230,4 +231,8 @@ function testWord(){
 
 function pauseSound(snd){
     snd.pause();
+}
+
+function showInfo () {
+    infoTxt.style.display = "block"
 }
