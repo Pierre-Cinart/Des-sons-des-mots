@@ -234,5 +234,9 @@ function pauseSound(snd){
 }
 
 function showInfo () {
-    infoTxt.style.display = "block"
+    if (infoTxt.style.display == "none") {
+        infoTxt.style.display = "block"
+    } else {
+        infoTxt.style.display = "none"
+    }
 }
