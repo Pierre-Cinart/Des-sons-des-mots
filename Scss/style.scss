@@ -1,7 +1,167 @@
+// declarartion des variables
+//config ._btn
+$bodyBgColor :  blue;
+$btnColor : white;
+$btnBgColor : gray;
+$btnBorderStyle : 1px solid black;
+$btnWidth : 100px;
+$btnHeight : 30px;
+$btnGap : 5px;
+// config #_screen
+$screenWidth : 100%;
+$screenHeight : 100vh;
+$screenBgColor : black;
+// config #images
+$imgBorderStyle : 1px solid yellow;
+$imgHoverBorderStyle : 1px solid green;
+
 *{
+    margin: 0px;
+    padding: 0px;
     box-sizing: border-box;
+    user-select: none;
 }
-html,body{
-    margin: 0;
-    padding: 0;
+
+body{
+
+    position: relative;
+    width: 100%;
+    min-width: 290px;
+    height: 100vh;
+    background-color: $bodyBgColor;
+    overflow: hidden;
+}
+
+#infoBar {
+    width: 100%;
+    height: auto;
+    background-color: black;
+    color: yellow;
+}
+
+#menu {
+    width: 90%;
+    height: 300px;
+    position: absolute;
+    top:30%;
+    left:50%;
+    transform: translate(-50%,0%);
+    background-color: rgba(52, 61, 60, 0.888);
+    border-radius: 20%;
+    border: 1px solid white;
+    text-align: center;
+}
+
+#menu h1 {
+    margin: 30px auto 10px auto;
+}
+
+._btn {  
+    margin: auto;
+    margin-bottom: $btnGap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    font-weight: bolder;
+    width: $btnWidth;
+    height: $btnHeight;
+    color: $btnColor;
+    background-color: $btnBgColor;
+    border: $btnBorderStyle;  
+    scale: 0.95;
+    transition-duration: 0.25s;    
+}
+
+._btn:hover {
+    scale: 1;
+    transition-duration: 0.25s;
+}
+
+#_screen {
+    width: $screenWidth;
+    height: $screenHeight;
+    margin: auto;
+    border: $btnBorderStyle;
+    background-color: $screenBgColor;
+    min-width: 290px;
+}
+
+#_sounds {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    min-width: 290px;
+    max-width: 680px;
+    height: 60vh;
+    margin: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: $imgBorderStyle;
+    img {
+        width: 128px;
+        height: 128px;
+        border: $imgBorderStyle;
+        border-radius: 50%;
+    }
+    img:hover {
+        width: 128px;
+        height: 128px;
+        border: $imgHoverBorderStyle;
+    }
+}
+
+#lettersEmpty {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    width: 90%;
+    max-width: 400px;
+    height: 30px;
+    margin: 10px auto ;
+    background-color: yellow;
+    border-radius: 20%;
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background-color: wheat;
+        font-weight: 900;
+    }
+}
+
+#letters {
+    cursor: pointer;
+    width: 75%;
+    max-width: 230px;
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background-color: wheat;
+        border: $imgBorderStyle;
+        border-radius: 10%;
+    }
+}
+#menu{
+    max-width: 400px;
+    
+}
+.displayNone {
+    display: none;
 }

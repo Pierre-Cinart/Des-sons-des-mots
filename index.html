@@ -4,37 +4,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./Css/style.css">
     <title>Des sons et des mots</title>
 </head>
 <body>
 <!-- HEADER -->
-    <header> <h1>DES SONS ET DE MOTS</h1></header>
-<!-- MENU DE LANCEMENT -->
-    <section>
-        <div id="menu">
-            <p>
-                JOUER
-            </p>
-        </div>
-    </section>
+    <header id="infoBar"> 
+        <p> niveau : </p>
+    </header>
+
 <!-- ECRAN DE JEU -->
-    <section>
-        <div id="infoBar">
+    <section id ="_screen">
+        <section>
+            <div id="menu"> 
+                <h1>DES SONS ET DE MOTS</h1>
+                <p class="_btn" onclick="newGame()">
+                    JOUER
+                </p>
+                <p class="_btn" onclick="showInfo()">INFOS</p>
+                <div id="infoTxt" style="display: none; position: absolute; color:white;font-size: 30px;">
+                    <p>
+                        Dans ce jeu vous devez écouter des sons et en déduire le mots avec les lettres proposées <br>
+                        Ce jeu est en cours de développement <br> 
+                    </p>
+                    <p class = "_btn" onclick="showInfo()"> retour </p>
+                </div>
+            </div>
+        </section>
+        
+            <div id="_sounds">
+                <img src="Images/play.png" onclick = "playSound(0)"alt="Images/play.png">
+                <img src="Images/play.png" onclick = "playSound(1)"alt="Images/play.png">
+                <img src="Images/play.png" onclick = "playSound(2)" alt="Images/play.png">
+                <!-- <img src="Images/play.png" onclick = "playSound(3)" alt="Images/play.png"> -->
+            </div>
+        
+        <div id="lettersEmpty">
             
         </div>
-        <div id="_screen">
-            <div id="_images">
-                
-            </div>
-        </div>
-        <div id="letterEmpty">
-
-        </div>
         <div id="letters">
-
         </div>
+        
     </section>
+    <!-- MENU DE LANCEMENT -->
+ 
     <script type ="text/javascript"src="./Js/app.js"></script>
 </body>
 </html>
