@@ -154,8 +154,7 @@ function playSound(nb){
             audio.currentTime = 0
             audio.src = audioSources[nb]
             audio.play()
-            audioTxt = audioSources[nb]
-            console.log('txt : ' + audioTxt)
+            audioTxt = audioSources[nb]      
             isPlaying = true
             
         } else if (audioTxt == audioSources[nb] && isPlaying) {
@@ -174,50 +173,76 @@ function playSound(nb){
 
 function clickLetter(letter){
 fx.currentTime = 0
+fx.src = './Audio/fx/click.mp3'
 fx.play()
 for (let i = 0; i < lettersEmpty.children.length; i++) {
-    if ( lettersEmpty.children[i].textContent == '_' && letter.textContent!=' '){
-        lettersEmpty.children[i].textContent = letter.textContent;
-        letter.textContent = ' ';
-        if (i == lettersEmpty.children.length -1){
-            testWord();
+   if ( lettersEmpty.children[i].textContent == '_' && letter.textContent!=' '){
+        lettersEmpty.children[i].textContent = letter.textContent
+        letter.textContent = ' '
+        for ( let j = 0  ; j < lettersEmpty.children.length ; j++) {
+            if (lettersEmpty.children[j].textContent == '_' ){
+                console.log(j + " : " +lettersEmpty.children[j].textContent)
+                return
+            } else { 
+                if( j == lettersEmpty.children.length - 1) {
+                    testWord()
+                }
+            }
+        
         }
-        return;
+        
     }
+  
    
 }
 
 }
 
-function resetLetter(letter){
+function resetLetter(letter) {
+   
     if (letter.textContent!='_'){
         for (let i = 0 ; i < letters.children.length ; i ++){
             if (letters.children[i].textContent == ' '){
-                letters.children[i].textContent = letter.textContent;
-                letter.textContent = '_';
-                return;
+                letters.children[i].textContent = letter.textContent
+                letter.textContent = '_'
+                if (lettersEmpty.children[0].style.backgroundColor == 'red'){
+                    console.log(lettersEmpty.children[0].style.backgroundColor)
+                    for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
+                        lettersEmpty.children[i].style.backgroundColor = 'wheat';
+                    }   
+                } 
+                return
             }
         }
-    }    
+    }
+       
 }
 
 function testWord(){
-    let good = true;
+    let good = true
+    // verifie si les lettres correspondent
     for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
         if (lettersEmpty.children[i].textContent != word[i].toUpperCase()){
             good = false;
         }
     }
+
     if (good){
         for ( let i = 0 ; i < lettersEmpty.children.length ; i ++){
                 lettersEmpty.children[i].style.backgroundColor = 'green';
                 
             }
             if ( words.length >= 1){
+                fx.currentTime = 0
+                fx.pause()
+                fx.src = './Audio/fx/applaudissement.ogg'
+                fx.play()
                 setTimeout(newGame,2000);
             }
             else{
-                console.log('fini')
+                alert('vous avez trouver tout les mots \n' +
+                'Cette application et en cours de développement \n'+
+                'pour toute sugestion rendez vous sur https://cinartdev.fr rubrique contact ')
             }
             
     }
