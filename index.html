@@ -121,6 +121,15 @@
         </section>
 
         <p id="feedback" class="feedback-zone" aria-live="polite"></p>
+
+        <!-- Zone d'action bas de plateau : visible uniquement pendant une partie active.
+             Le bouton QUITTER ramene au menu et reinitialise completement la session. -->
+        <div id="quitZone" class="quit-zone" hidden>
+            <button id="quitButton" class="_btn _btn--quit" type="button"
+                    aria-label="Quitter la partie et retourner au menu">
+                QUITTER
+            </button>
+        </div>
     </main>
 
     <section id="rewardOverlay" class="reward-overlay" aria-label="Recompense de manche" aria-live="polite" hidden>

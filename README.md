@@ -105,6 +105,18 @@ mais de rendre chaque partie plus claire :
 - Ajout d'une phrase courte sous le titre du menu pour presenter le principe.
 - Ajout d'un bouton d'aide `?` en jeu avec un panneau fermable par une croix.
 
+### Etape 4 - Alignement UI et bouton Quitter
+
+- Ancrage du bouton d'aide `?` a l'extreme droite de la barre de statut via
+  `position: absolute` : le niveau et les pieces restent centres sans etre
+  decales par le bouton.
+- Ajout d'un bouton `QUITTER` sous la zone de feedback, visible uniquement
+  pendant une partie active (attribut HTML `hidden` gere cote JavaScript).
+- La fonction `quitGame()` remet a zero dans l'ordre : audio, compteurs, plateau,
+  mot brouille, etat de partie, puis retourne au menu.
+- Commentaires de code en mode tutoriel : chaque etape de `quitGame()` est
+  documentee pour rendre la logique lisible dans l'historique git.
+
 ## Lancer le jeu
 
 Le projet peut etre ouvert comme un site statique.

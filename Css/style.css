@@ -66,7 +66,8 @@ img {
   gap: 10px;
   width: min(940px, calc(100% - 24px));
   margin: 14px auto 0;
-  padding: 10px;
+  /* Espace a droite pour le bouton ? en position absolue sans chevauchement */
+  padding: 10px 48px 10px 10px;
   border: 1px solid rgba(0, 255, 65, 0.18);
   border-radius: 999px;
   background: rgba(10, 18, 28, 0.78);
@@ -104,6 +105,11 @@ img {
   place-items: center;
   width: 24px;
   height: 24px;
+  /* Ancre le bouton ? a l'extreme droite de la barre de statut */
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   border: 1px solid rgba(0, 255, 65, 0.36);
   border-radius: 50%;
   background: rgba(0, 255, 65, 0.08);
@@ -681,6 +687,36 @@ img {
 
 .help-panel li::marker {
   color: #00ff41;
+}
+
+/* ─── Bouton QUITTER ──────────────────────────────────────────────────────── */
+
+/* Conteneur centre sous la zone de feedback */
+.quit-zone {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 8px;
+}
+
+/* Renforce [hidden] pour les anciens navigateurs */
+.quit-zone[hidden] {
+  display: none;
+}
+
+/* Variante danger : accent rouge pour signaler l'abandon de partie */
+._btn--quit {
+  border-color: rgba(255, 79, 116, 0.4);
+  background: linear-gradient(90deg, rgba(255, 79, 116, 0.12), rgba(255, 107, 53, 0.08));
+  color: #ff4f74;
+  box-shadow: 0 0 14px rgba(255, 79, 116, 0.14);
+}
+
+._btn--quit:hover,
+._btn--quit:focus-visible {
+  outline: none;
+  border-color: #ff4f74;
+  color: #ff4f74;
+  box-shadow: 0 0 24px rgba(255, 79, 116, 0.28);
 }
 
 @keyframes scan-line {

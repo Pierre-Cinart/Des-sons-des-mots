@@ -23,6 +23,9 @@ const rewardContinue = document.querySelector("#rewardContinue");
 const helpButton = document.querySelector("#helpButton");
 const helpOverlay = document.querySelector("#helpOverlay");
 const helpClose = document.querySelector("#helpClose");
+// References au bouton quitter et a sa zone conteneur (visibles uniquement en partie)
+const quitZone = document.querySelector("#quitZone");
+const quitButton = document.querySelector("#quitButton");
 const panelToggles = {
     info: document.querySelectorAll("[data-toggle-info]"),
     credits: document.querySelectorAll("[data-toggle-credits]")
@@ -85,6 +88,9 @@ function init() {
     setFeedback("");
     setCoins(0);
     updateCoinDisplay();
+
+    // Rend le bouton QUITTER visible maintenant qu'une partie est en cours
+    quitZone.hidden = false;
 }
 
 // Lance une nouvelle manche.
@@ -494,6 +500,8 @@ function continueAfterReward() {
     hideRewardOverlay();
 
     if (pendingEndOfGame) {
+        // Fin de partie complete : cache le bouton quitter avant de revenir au menu
+        quitZone.hidden = true;
         alert(
             "Vous avez trouve tous les mots.\n" +
             "Cette demo Pawat Labz est en cours de developpement.\n" +
@@ -506,6 +514,47 @@ function continueAfterReward() {
     }
 
     newGame();
+}
+
+// Abandonne la partie en cours et retourne au menu principal.
+//
+// Sequence d'execution :
+//   1. Arret audio      — on coupe tout son pour ne pas laisser de bruit orphelin.
+//   2. Remise a zero    — compteurs de niveau et de pieces reinitialises.
+//   3. Nettoyage visuel — plateau, coffre et feedback vides.
+//   4. Effacement mot   — la cellule brouillee est remplacee par une cellule vide
+//                         pour ne laisser aucune trace de la session en memoire.
+//   5. Retour menu      — on reactive la classe is-menu-open et on masque le plateau.
+//   6. Masquage bouton  — le bouton QUITTER disparait car on n'est plus en partie.
+//
+// Note : les pieces sont remises a 0 ici car il n'y a pas encore de sauvegarde.
+// Quand le systeme de sauvegarde sera ajoute, on conservera les pieces entre les sessions.
+function quitGame() {
+    // 1. Arret immediat du son en cours
+    stopActiveAudio();
+
+    // 2. Reinitialisation des compteurs
+    currentLevel = 0;
+    levelValue.textContent = "0";
+    setCoins(0);
+    updateCoinDisplay();
+
+    // 3. Nettoyage visuel du plateau (lettres, reponse, feedback, son)
+    clearRound();
+    hideRewardOverlay();
+
+    // 4. Effacement du mot brouille stocke en memoire
+    secureWord = createSecureCell("");
+
+    // 5. Desactivation de l'etat de partie et retour au menu
+    game = false;
+    menu.classList.remove("displayNone");
+    document.body.classList.add("is-menu-open");
+
+    // 6. Cache le bouton quitter : on est de retour au menu
+    quitZone.hidden = true;
+
+    setFeedback("");
 }
 
 function togglePanel(panelName) {
@@ -762,6 +811,8 @@ rewardChestButton.addEventListener("click", openRewardChest);
 rewardContinue.addEventListener("click", continueAfterReward);
 helpButton.addEventListener("click", () => toggleHelp(true));
 helpClose.addEventListener("click", () => toggleHelp(false));
+// Branche le bouton QUITTER sur la fonction d'abandon de partie
+quitButton.addEventListener("click", quitGame);
 helpOverlay.addEventListener("click", (event) => {
     if (event.target === helpOverlay) {
         toggleHelp(false);

@@ -54,6 +54,46 @@
         </section>
     </main>
 
-    <script src="./Js/todo-tracker.js" defer></script>
+        <script>
+            (function () {
+                try {
+                    const savedProgress = {
+                        "base-branch": true,
+                        "base-docs": true,
+                        "base-run": true,
+                        "html-title": true,
+                        "html-id-sounds": true,
+                        "html-buttons": true,
+                        "html-audio-buttons": true,
+                        "html-info": true,
+                        "html-zones": true,
+                        "vision-core": true,
+                        "vision-pawat": true,
+                        "rules-start-coins": true,
+                        "rules-20": true,
+                        "rules-50": true,
+                        "rules-free-sound": true,
+                        "rules-name": true,
+                        "design-palette": true,
+                        "coins-counter": true,
+                        "coins-future-x2": false,
+                        "coins-reward": true,
+                        "coins-feedback": true,
+                        "coins-no-negative": true,
+                        "bonus-20": true,
+                        "bonus-50": true,
+                        "bonus-disabled": true
+                    };
+
+                    window.localStorage.setItem(
+                        "des-sons-des-mots-roadmap-progress",
+                        JSON.stringify(savedProgress)
+                    );
+                } catch (e) {
+                    // silent
+                }
+            })();
+        </script>
+        <script src="./Js/todo-tracker.js" defer></script>
 </body>
 </html>
