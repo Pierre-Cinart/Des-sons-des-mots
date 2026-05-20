@@ -46,7 +46,7 @@ const bonusLetterButton      = document.querySelector("#bonusLetterButton");
 const bonusSupButton         = document.querySelector("#bonusSupButton");
 const bonusLetterCostDisplay = document.querySelector("#bonusLetterCostDisplay");
 const bonusSupCostDisplay    = document.querySelector("#bonusSupCostDisplay");
-// Zone d'action : vies + bouton VALIDER
+// Zone d'action : bouton QUITTER (visible uniquement pendant une partie active)
 const actionZone     = document.querySelector("#actionZone");
 const validateButton = document.querySelector("#validateButton");
 const livesIcons     = document.querySelector("#livesIcons");
@@ -585,7 +585,7 @@ function renderLives() {
     // Texte accessible pour les lecteurs d'ecran
     livesIcons.setAttribute(
         "aria-label",
-        (maxErrors - errorCount) + " vie(s) sur " + maxErrors
+        (maxErrors - errorCount) + " chance(s) sur " + maxErrors
     );
 }
 

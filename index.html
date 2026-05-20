@@ -17,6 +17,10 @@
             Pieces : <span id="coinValue">0</span>
             <img class="coin-status__icon" src="Images/coins.webp" alt="" aria-hidden="true">
         </p>
+        <div id="livesBar" class="lives-bar" aria-live="polite" aria-label="Chances restantes">
+            <span class="lives-bar__label">Chances</span>
+            <span id="livesIcons" class="lives-bar__icons" aria-hidden="true"></span>
+        </div>
         <button id="helpButton" class="help-button" type="button" aria-label="Afficher l'aide du jeu" aria-controls="helpOverlay" aria-expanded="false">
             ?
         </button>
@@ -145,14 +149,9 @@
             </div>
         </section>
 
-        <!-- Zone d'action : vies a gauche, bouton QUITTER a droite.
-             Visible uniquement pendant une partie active.
-             VALIDER est maintenant dans la zone de reponse (answer-zone). -->
+        <!-- Zone d'action : bouton QUITTER a droite.
+             Visible uniquement pendant une partie active. -->
         <div id="actionZone" class="action-zone" hidden>
-            <div id="livesBar" class="lives-bar" aria-live="polite" aria-label="Vies restantes">
-                <span class="lives-bar__label">VIES</span>
-                <span id="livesIcons" class="lives-bar__icons" aria-hidden="true"></span>
-            </div>
             <button id="quitButton" class="_btn _btn--quit" type="button"
                     aria-label="Quitter la partie et retourner au menu">
                 QUITTER
