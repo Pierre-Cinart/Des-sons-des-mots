@@ -1277,6 +1277,7 @@ function bonusRevealLetter() {
     const letter = currentWord[chosen.index].toUpperCase();
     chosen.slot.textContent = letter;
     chosen.slot.classList.add("letterEmpty--bonus");
+    playSyntheticReward([880, 1320, 1760], 0.18);
 
     // Retire la lettre de la banque en privilegiant un doublon leurre
     let removed = false;
@@ -1354,6 +1355,7 @@ function bonusRemoveDecoy() {
     const chosen = decoys[Math.trunc(Math.random() * decoys.length)];
     chosen.textContent = " ";
     chosen.setAttribute("aria-label", "Emplacement de lettre vide");
+    playSyntheticReward([880, 1320, 1760], 0.18);
 
     setFeedback("Lettre inutile supprimee !");
 }
