@@ -36,5 +36,23 @@ JSON selon le navigateur. Un serveur local est recommande.
 6. `security: brouiller les reponses frontend`
 7. `feat: ajouter le compteur de pieces`
 8. `feat: ajouter les bonus audio`
-9. `style: ameliorer le plateau de jeu`
-10. `docs: documenter l ajout de niveaux`
+9. `feat: ajouter le coffre de recompense`
+10. `style: ameliorer le plateau de jeu`
+11. `docs: documenter l ajout de niveaux`
+
+## Derniere etape realisee
+
+L'etape coffre de recompense est posee :
+
+- cadenas visible sur les pistes verrouillees ;
+- cout de deverrouillage affiche avec l'icone pieces ;
+- coffre ferme au centre apres une bonne reponse ;
+- ouverture au clic avec defilement de chiffres ;
+- bouton `Continuer` pour passer volontairement au niveau suivant.
+- arret du son actif quand le mot est devine ;
+- panneau `Infos` enrichi avec les regles de base ;
+- pictogramme lecture recentre dans son cercle.
+- icone de piece alignee juste apres les nombres dans le compteur et les verrous.
+- plateau masque tant que le menu de demarrage est affiche.
+- phrase d'accroche ajoutee sous le titre du menu.
+- bouton d'aide `?` ajoute en jeu avec panneau explicatif et croix de fermeture.

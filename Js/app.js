@@ -13,6 +13,16 @@ const feedback = document.querySelector("#feedback");
 const levelValue = document.querySelector("#levelValue");
 const coinValue = document.querySelector("#coinValue");
 const soundButtons = Array.from(sounds.querySelectorAll("[data-sound-index]"));
+const rewardOverlay = document.querySelector("#rewardOverlay");
+const rewardChestButton = document.querySelector("#rewardChestButton");
+const rewardChestImage = document.querySelector("#rewardChestImage");
+const rewardTicker = document.querySelector("#rewardTicker");
+const rewardAmount = document.querySelector("#rewardAmount");
+const rewardAmountValue = document.querySelector("#rewardAmountValue");
+const rewardContinue = document.querySelector("#rewardContinue");
+const helpButton = document.querySelector("#helpButton");
+const helpOverlay = document.querySelector("#helpOverlay");
+const helpClose = document.querySelector("#helpClose");
 const panelToggles = {
     info: document.querySelectorAll("[data-toggle-info]"),
     credits: document.querySelectorAll("[data-toggle-credits]")
@@ -41,6 +51,11 @@ let randomList = [];
 let game = false;
 let currentLevel = 0;
 let unlockedSounds = [true, false, false];
+let roundResolved = false;
+let pendingReward = 0;
+let pendingEndOfGame = false;
+let rewardCanOpen = false;
+let rewardTickerTimer = null;
 
 const alphabet = [
     "A", "A", "A", "B", "C", "C", "C",
@@ -62,8 +77,11 @@ let secureCoins = createSecureCell(0); // Pieces conservees dans une cellule bro
 function init() {
     fx.src = "./Audio/fx/click.mp3";
     resetWordPool();
+    currentLevel = 0;
+    levelValue.textContent = "0";
 
     menu.classList.add("displayNone");
+    document.body.classList.remove("is-menu-open");
     setFeedback("");
     setCoins(0);
     updateCoinDisplay();
@@ -84,6 +102,7 @@ function newGame() {
     }
 
     clearRound();
+    hideRewardOverlay();
 
     setCurrentWord(randomWord(words));
     currentLevel += 1;
@@ -109,6 +128,7 @@ function clearRound() {
     audio.currentTime = 0;
     audioTxt = "";
     isPlaying = false;
+    roundResolved = false;
 }
 
 // Prepare les trois sons du mot actif.
@@ -196,10 +216,21 @@ function renderAnswerSlots() {
     }
 }
 
-// Joue, met en pause ou reprend un son selon le bouton choisi.
+// Gere la lecture des pistes d'indice.
+// 1. On refuse la lecture si aucune partie n'est active.
+// 2. On bloque les sons apres une bonne reponse pour eviter de continuer
+//    a manipuler la manche pendant l'animation du coffre.
+// 3. On verifie l'etat local avant de debloquer ou jouer une piste.
+// 4. On utilise safePlay() pour eviter les erreurs console quand le navigateur
+//    interrompt volontairement une lecture audio.
 function playSound(nb) {
     if (!game) {
         setFeedback("Lance une partie avant de jouer un son.");
+        return;
+    }
+
+    if (roundResolved) {
+        setFeedback("Ouvre le coffre pour recuperer ta recompense.");
         return;
     }
 
@@ -214,7 +245,7 @@ function playSound(nb) {
     if (audioTxt !== audioSources[nb]) {
         audio.currentTime = 0;
         audio.src = audioSources[nb];
-        audio.play();
+        safePlay(audio);
         audioTxt = audioSources[nb];
         isPlaying = true;
         return;
@@ -226,15 +257,19 @@ function playSound(nb) {
         return;
     }
 
-    audio.play();
+    safePlay(audio);
     isPlaying = true;
 }
 
 // Ajoute une lettre choisie dans le premier emplacement libre.
 function clickLetter(letter) {
+    if (roundResolved) {
+        return;
+    }
+
     fx.currentTime = 0;
     fx.src = "./Audio/fx/click.mp3";
-    fx.play();
+    safePlay(fx);
 
     for (let i = 0; i < lettersEmpty.children.length; i += 1) {
         if (lettersEmpty.children[i].textContent === "_" && letter.textContent !== " ") {
@@ -260,6 +295,10 @@ function checkIfAnswerIsComplete() {
 
 // Retire une lettre posee et la replace dans la premiere case disponible.
 function resetLetter(letter) {
+    if (roundResolved) {
+        return;
+    }
+
     if (letter.textContent === "_") {
         return;
     }
@@ -287,6 +326,10 @@ function clearWrongAnswerState() {
 
 // Compare la proposition du joueur avec le mot courant.
 function testWord() {
+    if (roundResolved) {
+        return;
+    }
+
     const currentWord = getCurrentWord();
     let good = true;
 
@@ -304,30 +347,32 @@ function testWord() {
     handleWrongAnswer();
 }
 
-// Feedback et passage automatique a la manche suivante.
+// Verrouille la manche et lance le coffre de recompense.
+// Important pedagogique :
+// - la piste audio en cours est arretee des que le mot est devine ;
+// - les pieces ne sont pas creditees immediatement ;
+// - le gain est garde en attente dans pendingReward ;
+// - l'ajout au compteur se fait seulement quand le coffre est ouvert.
+// Cette separation rend la boucle de jeu plus claire :
+// "bonne reponse" -> "coffre" -> "gain" -> "continuer".
 function handleGoodAnswer() {
+    roundResolved = true;
+    stopActiveAudio();
+
     for (let i = 0; i < lettersEmpty.children.length; i += 1) {
         lettersEmpty.children[i].classList.add("letterEmpty--good");
     }
 
-    const reward = rollCoinReward();
-    addCoins(reward);
-    setFeedback("Bonne reponse ! +" + reward + " piece" + (reward > 1 ? "s" : "") + ".");
+    pendingReward = rollCoinReward();
+    pendingEndOfGame = words.length < 1;
+    setFeedback("Bonne reponse ! Ouvre le coffre pour reveler les pieces.");
 
-    if (words.length >= 1) {
-        fx.currentTime = 0;
-        fx.pause();
-        fx.src = "./Audio/fx/applaudissement.ogg";
-        fx.play();
-        setTimeout(newGame, 2000);
-        return;
-    }
+    fx.currentTime = 0;
+    fx.pause();
+    fx.src = "./Audio/fx/applaudissement.ogg";
+    safePlay(fx);
 
-    alert(
-        "Vous avez trouve tous les mots.\n" +
-        "Cette demo Pawat Labz est en cours de developpement.\n" +
-        "Le systeme de sauvegarde arrivera avec la mise en ligne."
-    );
+    showRewardOverlay();
 }
 
 // Feedback en cas d'erreur.
@@ -341,6 +386,126 @@ function handleWrongAnswer() {
 
 function setFeedback(message) {
     feedback.textContent = message;
+}
+
+// Affiche ou masque l'aide de jeu.
+// Cette aide est volontairement separee du panneau "Infos" du menu :
+// - "Infos" presente le projet et la beta avant de jouer ;
+// - "Aide" accompagne le joueur pendant la partie avec les actions utiles.
+function toggleHelp(isOpen) {
+    helpOverlay.hidden = !isOpen;
+    helpButton.setAttribute("aria-expanded", String(isOpen));
+
+    if (isOpen) {
+        helpClose.focus();
+        return;
+    }
+
+    helpButton.focus();
+}
+
+function stopActiveAudio() {
+    audio.pause();
+    audio.currentTime = 0;
+    audioTxt = "";
+    isPlaying = false;
+}
+
+function safePlay(media) {
+    const playPromise = media.play();
+
+    if (playPromise?.catch) {
+        playPromise.catch(() => {
+            // Certains navigateurs rejettent play() si un son est coupe trop vite.
+            // On garde l'erreur silencieuse pour ne pas polluer la console en beta.
+        });
+    }
+}
+
+function showRewardOverlay() {
+    clearInterval(rewardTickerTimer);
+    rewardCanOpen = false;
+    rewardOverlay.hidden = false;
+    rewardOverlay.classList.remove("reward-overlay--opened");
+    rewardOverlay.classList.add("reward-overlay--entering");
+    rewardChestButton.disabled = true;
+    rewardChestImage.src = "Images/chest_close.webp";
+    rewardChestImage.alt = "Coffre ferme";
+    rewardTicker.textContent = "?";
+    rewardAmount.hidden = true;
+    rewardContinue.hidden = true;
+
+    // La courte attente laisse le zoom-in se terminer avant d'autoriser le clic.
+    setTimeout(() => {
+        rewardCanOpen = true;
+        rewardChestButton.disabled = false;
+        rewardChestButton.focus();
+        rewardOverlay.classList.remove("reward-overlay--entering");
+    }, 650);
+}
+
+function hideRewardOverlay() {
+    clearInterval(rewardTickerTimer);
+    rewardOverlay.hidden = true;
+    rewardOverlay.classList.remove("reward-overlay--entering", "reward-overlay--opened");
+    rewardChestButton.disabled = true;
+    rewardCanOpen = false;
+}
+
+function openRewardChest() {
+    if (!rewardCanOpen || rewardOverlay.classList.contains("reward-overlay--opened")) {
+        return;
+    }
+
+    rewardCanOpen = false;
+    rewardChestButton.disabled = true;
+    rewardOverlay.classList.add("reward-overlay--opened");
+    rewardChestImage.src = "Images/chest_open.webp";
+    rewardChestImage.alt = "Coffre ouvert";
+    animateRewardTicker();
+}
+
+function animateRewardTicker() {
+    const startTime = Date.now();
+    const duration = 850;
+
+    clearInterval(rewardTickerTimer);
+    rewardTickerTimer = setInterval(() => {
+        const nextNumber = Math.trunc(Math.random() * 5) + 1;
+        rewardTicker.textContent = String(nextNumber);
+
+        if (Date.now() - startTime >= duration) {
+            clearInterval(rewardTickerTimer);
+            revealReward();
+        }
+    }, 60);
+}
+
+function revealReward() {
+    rewardTicker.textContent = String(pendingReward);
+    rewardAmountValue.textContent = String(pendingReward);
+    rewardAmount.hidden = false;
+    rewardContinue.hidden = false;
+    addCoins(pendingReward);
+    rewardContinue.focus();
+}
+
+function continueAfterReward() {
+    hideRewardOverlay();
+
+    if (pendingEndOfGame) {
+        alert(
+            "Vous avez trouve tous les mots.\n" +
+            "Cette demo Pawat Labz est en cours de developpement.\n" +
+            "Le systeme de sauvegarde arrivera avec la mise en ligne."
+        );
+        menu.classList.remove("displayNone");
+        document.body.classList.add("is-menu-open");
+        game = false;
+        return;
+    }
+
+    newGame();
 }
 
 function togglePanel(panelName) {
@@ -495,7 +660,7 @@ function playRewardFx(reward) {
 
     fx.currentTime = 0;
     fx.src = "./Audio/fx/applaudissement.ogg";
-    fx.play();
+    safePlay(fx);
 }
 
 function playSyntheticReward(frequencies, duration) {
@@ -504,7 +669,7 @@ function playSyntheticReward(frequencies, duration) {
     if (!AudioContextClass) {
         fx.currentTime = 0;
         fx.src = "./Audio/fx/applaudissement.ogg";
-        fx.play();
+        safePlay(fx);
         return;
     }
 
@@ -574,7 +739,11 @@ function updateSoundButtons() {
         );
 
         const price = button.querySelector(".sound-button__price");
+        const lockPanel = button.querySelector(".sound-button__lock");
+        const lockCost = lockPanel.querySelector("strong");
+
         price.textContent = isUnlocked ? (cost === 0 ? "Actif" : "Debloque") : (cost === 0 ? "Gratuit" : cost + " pieces");
+        lockCost.textContent = String(cost);
     });
 }
 
@@ -588,6 +757,15 @@ panelToggles.credits.forEach((button) => {
 });
 sounds.querySelectorAll("[data-sound-index]").forEach((button) => {
     button.addEventListener("click", () => playSound(Number(button.dataset.soundIndex)));
+});
+rewardChestButton.addEventListener("click", openRewardChest);
+rewardContinue.addEventListener("click", continueAfterReward);
+helpButton.addEventListener("click", () => toggleHelp(true));
+helpClose.addEventListener("click", () => toggleHelp(false));
+helpOverlay.addEventListener("click", (event) => {
+    if (event.target === helpOverlay) {
+        toggleHelp(false);
+    }
 });
 updateCoinDisplay();
 updateSoundButtons();

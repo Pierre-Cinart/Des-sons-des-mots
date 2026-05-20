@@ -27,8 +27,18 @@ Le jeu fonctionne avec une structure tres directe :
 - `Audio/` : sons classes par mot.
 - `Images/` : images d'interface.
 
-La version actuelle est volontairement simple, mais plusieurs points doivent
-etre repris avant d'ajouter de nouvelles fonctionnalites.
+La version actuelle est une beta pedagogique inspiree de l'univers Pawat Labz.
+Elle propose deja :
+
+- un menu de jeu avec infos et credits ;
+- un compteur de pieces local ;
+- trois pistes audio, dont deux a deverrouiller avec des pieces ;
+- une recompense aleatoire de 1 a 5 pieces apres une bonne reponse ;
+- une animation de coffre avant de passer au niveau suivant ;
+- une premiere couche de brouillage frontend pour les pieces et le mot courant.
+
+De nombreuses mises a jour sont encore prevues, notamment pour les bonus,
+l'equilibrage, la sauvegarde et le futur backend.
 
 ## Limite anti-triche actuelle
 
@@ -62,6 +72,38 @@ mais de rendre chaque partie plus claire :
 4. Ajouter le brouillage anti-triche frontend.
 5. Ameliorer l'interface, le feedback joueur et le responsive.
 6. Documenter chaque choix important pour pouvoir continuer facilement.
+
+## Etapes realisees
+
+### Etape 1 - Base HTML et interactions
+
+- Remplacement des interactions inline par des listeners JavaScript.
+- Creation de zones plus lisibles pour le menu, les sons, la reponse, les lettres
+  et le feedback.
+- Ajout de vrais boutons pour preparer l'accessibilite clavier.
+
+### Etape 2 - Style Pawat Labz et economie locale
+
+- Adaptation visuelle retro-futuriste : grille, scan-line, vert neon, cyan et
+  accent pieces.
+- Ajout du menu `Jouer`, `Infos`, `Credits`.
+- Ajout des pieces, du cout des pistes audio et d'un brouillage frontend simple.
+
+### Etape 3 - Verrous et coffre de recompense
+
+- Affichage d'un cadenas sur les pistes verrouillees.
+- Affichage du cout de deverrouillage avec l'icone de pieces.
+- Ajout d'un coffre central apres une bonne reponse.
+- Ouverture du coffre au clic, defilement rapide de chiffres entre 1 et 5,
+  affichage du gain puis bouton `Continuer`.
+- Arret automatique du son d'indice quand le mot est trouve.
+- Amelioration du panneau `Infos` pour expliquer les regles des le debut.
+- Correction du pictogramme lecture pour garder le triangle centre dans son cercle.
+- Alignement de l'icone de piece juste apres les nombres dans le compteur et les
+  couts de deverrouillage.
+- Masquage du plateau tant que le menu de demarrage est ouvert.
+- Ajout d'une phrase courte sous le titre du menu pour presenter le principe.
+- Ajout d'un bouton d'aide `?` en jeu avec un panneau fermable par une croix.
 
 ## Lancer le jeu
 
