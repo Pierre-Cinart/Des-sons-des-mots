@@ -218,5 +218,5 @@ Pour utiliser la version cliquable, lance le projet via un serveur local puis
 ouvre `todo.html`.
 
 
-reprise v1 front only push V1.0.1
+reprise v1 front only push V1.0.2
 
