@@ -1,0 +1,175 @@
+{
+  "project": "Des sons et des mots",
+  "branch": "dev",
+  "version": "0.1.0-roadmap",
+  "notes": [
+    "Roadmap de refonte pedagogique, pensee pour avancer en petits pushs.",
+    "La securite frontend sert a brouiller les pistes, pas a remplacer un futur backend.",
+    "Pas d'achat ni publicite dans cette version."
+  ],
+  "phases": [
+    {
+      "id": "vision",
+      "title": "Vision du jeu",
+      "goal": "Cadrer le cap avant de coder.",
+      "tasks": [
+        { "id": "vision-core", "label": "Garder le principe : ecouter des sons, deviner un mot, composer la reponse." },
+        { "id": "vision-pawat", "label": "Adapter l'identite visuelle a Pawat Labz : labo, signal audio, neon/cyber." },
+        { "id": "vision-pedago", "label": "Organiser la refonte en etapes tutoriel + push." },
+        { "id": "vision-difficulty", "label": "Rendre le jeu moins facile avec pieces, bonus et sons indices." },
+        { "id": "vision-backend", "label": "Preparer le futur backend sans achat ni pub dans cette version." }
+      ]
+    },
+    {
+      "id": "questions",
+      "title": "Questions gameplay a trancher",
+      "goal": "Decider les regles avant la refonte du gameplay.",
+      "tasks": [
+        { "id": "rules-start-coins", "label": "Decider si le joueur commence a 0 piece ou avec un petit capital." },
+        { "id": "rules-bonus-replay", "label": "Decider si un bonus achete reste rejouable gratuitement pendant le niveau." },
+        { "id": "rules-free-sound", "label": "Definir le son gratuit : combien de lectures, difficulte, clarté." },
+        { "id": "rules-20", "label": "Definir l'indice audio a 20 pieces." },
+        { "id": "rules-50", "label": "Definir l'indice audio a 50 pieces." },
+        { "id": "rules-name", "label": "Decider si le nom reste Des sons et des mots ou devient plus Pawat Labz." }
+      ]
+    },
+    {
+      "id": "step-0",
+      "title": "Etape 0 - Base de travail propre",
+      "goal": "Avoir un point de depart clair sur dev.",
+      "tasks": [
+        { "id": "base-branch", "label": "Verifier que la branche dev est a jour." },
+        { "id": "base-docs", "label": "Commiter README, TODO et todo cliquable." },
+        { "id": "base-run", "label": "Lancer la version actuelle pour garder un point de comparaison." },
+        { "id": "base-bugs", "label": "Noter les bugs visibles avant refonte." }
+      ]
+    },
+    {
+      "id": "step-1",
+      "title": "Etape 1 - Nettoyage HTML",
+      "goal": "Nettoyer la structure sans changer le gameplay.",
+      "tasks": [
+        { "id": "html-title", "label": "Corriger le titre affiche : DES SONS ET DES MOTS." },
+        { "id": "html-id-sounds", "label": "Corriger l'incoherence entre #_sounds et #sounds." },
+        { "id": "html-buttons", "label": "Remplacer les faux boutons p par des button." },
+        { "id": "html-audio-buttons", "label": "Transformer les images de lecture en boutons audio accessibles." },
+        { "id": "html-info", "label": "Retirer les styles inline du panneau d'infos." },
+        { "id": "html-zones", "label": "Ajouter les zones menu, pieces, sons, reponse, lettres et feedback." }
+      ]
+    },
+    {
+      "id": "step-2",
+      "title": "Etape 2 - Design Pawat Labz",
+      "goal": "Poser un premier habillage labo/neon.",
+      "tasks": [
+        { "id": "design-palette", "label": "Definir une palette sombre avec accents cyan/neon et pieces jaune/orange." },
+        { "id": "design-menu", "label": "Creer un vrai menu de depart : jouer, regles, recommencer/reprendre." },
+        { "id": "design-board", "label": "Ameliorer la disposition du plateau de jeu." },
+        { "id": "design-mobile", "label": "Verifier mobile et eviter le contenu coupe." },
+        { "id": "design-tone", "label": "Garder une interface ludique et labo, pas corporate." }
+      ]
+    },
+    {
+      "id": "step-3",
+      "title": "Etape 3 - JavaScript propre",
+      "goal": "Rendre la logique plus maintenable.",
+      "tasks": [
+        { "id": "js-no-inline", "label": "Supprimer les onclick inline." },
+        { "id": "js-events", "label": "Brancher les interactions avec addEventListener." },
+        { "id": "js-state", "label": "Creer un gameState : partie, niveau, pieces, lettres, audio, bonus." },
+        { "id": "js-globals", "label": "Limiter les variables globales." },
+        { "id": "js-rdm", "label": "Corriger la variable globale accidentelle rdm." },
+        { "id": "js-logs", "label": "Retirer les console.log de debug." }
+      ]
+    },
+    {
+      "id": "step-4",
+      "title": "Etape 4 - Donnees de niveaux",
+      "goal": "Separer le contenu de la logique.",
+      "tasks": [
+        { "id": "data-file", "label": "Creer une structure de niveaux claire." },
+        { "id": "data-neutral-ids", "label": "Utiliser des ids neutres : level-001, sound-001." },
+        { "id": "data-fields", "label": "Prevoir reponse encodee, sons gratuits, sons bonus, leurres, difficulte." },
+        { "id": "data-shuffle", "label": "Melanger les niveaux sans detruire la liste." },
+        { "id": "data-end", "label": "Prevoir une fin de partie propre." }
+      ]
+    },
+    {
+      "id": "step-5",
+      "title": "Etape 5 - Brouillage anti-triche frontend",
+      "goal": "Rendre la triche directe moins evidente.",
+      "tasks": [
+        { "id": "anti-audio-folders", "label": "Renommer les dossiers audio pour ne plus reveler la reponse." },
+        { "id": "anti-paths", "label": "Ne plus construire les chemins audio avec le mot en clair." },
+        { "id": "anti-encoded", "label": "Stocker les reponses sous forme encodee ou legerement chiffree." },
+        { "id": "anti-decode", "label": "Ajouter une fonction de decodage courte et bien commentee." },
+        { "id": "anti-scope", "label": "Decoder uniquement pendant la validation, sans stock global durable." },
+        { "id": "anti-doc", "label": "Documenter la limite : brouillage frontend, pas securite definitive." }
+      ]
+    },
+    {
+      "id": "step-6",
+      "title": "Etape 6 - Systeme de pieces",
+      "goal": "Ajouter une economie de jeu simple.",
+      "tasks": [
+        { "id": "coins-counter", "label": "Ajouter un compteur de pieces visible." },
+        { "id": "coins-state", "label": "Stocker les pieces dans gameState." },
+        { "id": "coins-reward", "label": "Donner entre 1 et 5 pieces au hasard apres une bonne reponse." },
+        { "id": "coins-feedback", "label": "Afficher un feedback +X pieces." },
+        { "id": "coins-no-negative", "label": "Empecher le compteur de devenir negatif." },
+        { "id": "coins-future-x2", "label": "Preparer une place UI pour un futur multiplicateur pub x2, sans le brancher." }
+      ]
+    },
+    {
+      "id": "step-7",
+      "title": "Etape 7 - Bonus et difficulte",
+      "goal": "Rendre le jeu plus interessant.",
+      "tasks": [
+        { "id": "bonus-20", "label": "Ajouter un bouton bonus a 20 pieces." },
+        { "id": "bonus-50", "label": "Ajouter un bouton bonus a 50 pieces." },
+        { "id": "bonus-disabled", "label": "Desactiver les bonus si le joueur n'a pas assez de pieces." },
+        { "id": "bonus-debit", "label": "Debiter les pieces quand un bonus est achete." },
+        { "id": "bonus-owned", "label": "Marquer un bonus comme achete pendant le niveau." },
+        { "id": "difficulty", "label": "Augmenter la difficulte : plus de leurres, mots longs, sons gratuits moins evidents." }
+      ]
+    },
+    {
+      "id": "step-8",
+      "title": "Etape 8 - Audio web",
+      "goal": "Alleger et normaliser les sons.",
+      "tasks": [
+        { "id": "audio-inventory", "label": "Faire l'inventaire des sons existants." },
+        { "id": "audio-clean", "label": "Nettoyer les sons trop lourds ou trop longs." },
+        { "id": "audio-volume", "label": "Normaliser les volumes." },
+        { "id": "audio-format", "label": "Choisir le format cible : M4A/AAC pour compatibilite, OGG si fallback utile." },
+        { "id": "audio-neutral", "label": "Renommer les fichiers avec des ids neutres." },
+        { "id": "audio-player", "label": "Centraliser la lecture et garantir un seul son actif." }
+      ]
+    },
+    {
+      "id": "step-9",
+      "title": "Etape 9 - Accessibilite et feedback",
+      "goal": "Rendre le jeu plus confortable et plus clair.",
+      "tasks": [
+        { "id": "a11y-keyboard", "label": "Rendre tout jouable au clavier." },
+        { "id": "a11y-focus", "label": "Ajouter un focus visible." },
+        { "id": "a11y-labels", "label": "Ajouter aria-label aux boutons audio et bonus." },
+        { "id": "a11y-status", "label": "Ajouter une zone de statut pour lecteur d'ecran." },
+        { "id": "feedback-colors", "label": "Ne pas transmettre l'information uniquement par couleur." },
+        { "id": "feedback-end", "label": "Ajouter feedback bonne reponse, mauvaise reponse, pieces gagnees, fin de partie." }
+      ]
+    },
+    {
+      "id": "step-10",
+      "title": "Etape 10 - Documentation et backend futur",
+      "goal": "Garder le projet transmissible.",
+      "tasks": [
+        { "id": "docs-readme", "label": "Mettre a jour le README apres chaque grosse etape." },
+        { "id": "docs-levels", "label": "Documenter comment ajouter un niveau." },
+        { "id": "docs-encode", "label": "Documenter comment encoder une reponse." },
+        { "id": "docs-bonus", "label": "Documenter comment ajouter un son bonus." },
+        { "id": "backend-roadmap", "label": "Garder une roadmap backend : sessions, validation serveur, pieces, pub, achat." }
+      ]
+    }
+  ]
+}

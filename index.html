@@ -7,47 +7,165 @@
     <link rel="stylesheet" href="./Css/style.css">
     <title>Des sons et des mots</title>
 </head>
-<body>
-<!-- HEADER -->
-    <header id="infoBar"> 
-        <p> niveau : </p>
+<body class="is-menu-open">
+    <div class="background-grid" aria-hidden="true"></div>
+    <div class="scan-line" aria-hidden="true"></div>
+
+    <header id="infoBar" class="game-status" aria-label="Informations de partie">
+        <p>Niveau : <span id="levelValue">0</span></p>
+        <p class="coin-status">
+            Pieces : <span id="coinValue">0</span>
+            <img class="coin-status__icon" src="Images/coins.webp" alt="" aria-hidden="true">
+        </p>
+        <button id="helpButton" class="help-button" type="button" aria-label="Afficher l'aide du jeu" aria-controls="helpOverlay" aria-expanded="false">
+            ?
+        </button>
     </header>
 
-<!-- ECRAN DE JEU -->
-    <section id ="_screen">
-        <section>
-            <div id="menu"> 
-                <h1>DES SONS ET DE MOTS</h1>
-                <p class="_btn" onclick="newGame()">
+    <main id="screen" class="game-screen">
+        <section id="menu" class="start-menu" aria-labelledby="gameTitle">
+            <h1 id="gameTitle">Des Sons &amp; Des Mots</h1>
+            <p class="start-menu__subtitle">Ecoutez des sons, devinez le mot.</p>
+            <p class="start-menu__tagline">
+                Demo pedagogique Pawat Labz. Trouve le mot, gagne des pieces et debloque plus d'indices audio.
+            </p>
+
+            <div class="start-menu__actions">
+                <button class="_btn" type="button" data-start-game>
                     JOUER
+                </button>
+                <button class="_btn" type="button" data-toggle-info aria-expanded="false" aria-controls="infoTxt">
+                    INFOS
+                </button>
+                <button class="_btn" type="button" data-toggle-credits aria-expanded="false" aria-controls="creditsTxt">
+                    CREDITS
+                </button>
+            </div>
+
+            <aside id="infoTxt" class="info-panel" hidden>
+                <p>
+                    But du jeu : ecoute les sons disponibles, retrouve le mot cache, puis compose la reponse avec les lettres proposees.
                 </p>
-                <p class="_btn" onclick="showInfo()">INFOS</p>
-                <div id="infoTxt" style="display: none; position: absolute; color:white;font-size: 30px;">
-                    <p>
-                        Dans ce jeu vous devez écouter des sons et en déduire le mot avec les lettres proposées <br>
-                        Ce jeu est en cours de développement <br> 
-                    </p>
-                    <p class = "_btn" onclick="showInfo()"> fermer </p>
-                </div>
-            </div>
+                <p>
+                    Le premier signal audio est gratuit. Les signaux 02 et 03 sont des indices supplementaires : ils se deverrouillent avec les pieces gagnees en jeu.
+                </p>
+                <p>
+                    Chaque bonne reponse ouvre un coffre. Clique dessus pour reveler un gain aleatoire entre 1 et 5 pieces, puis appuie sur Continuer pour passer au niveau suivant.
+                </p>
+                <p>
+                    Des Sons &amp; Des Mots fait partie de l'univers Pawat Labz. Cette version beta est encore en construction : de nombreuses mises a jour sont prevues pour enrichir les bonus, l'equilibrage et la sauvegarde lors de la mise en ligne.
+                </p>
+                <button class="_btn" type="button" data-toggle-info>
+                    Fermer
+                </button>
+            </aside>
+
+            <aside id="creditsTxt" class="info-panel" hidden>
+                <p>
+                    Pawat Labz, tous droits reserves.
+                </p>
+                <button class="_btn" type="button" data-toggle-credits>
+                    Fermer
+                </button>
+            </aside>
         </section>
-        
-            <div id="_sounds">
-                <img src="Images/play.png" onclick = "playSound(0)"alt="Images/play.png">
-                <img src="Images/play.png" onclick = "playSound(1)"alt="Images/play.png">
-                <img src="Images/play.png" onclick = "playSound(2)" alt="Images/play.png">
-                <!-- <img src="Images/play.png" onclick = "playSound(3)" alt="Images/play.png"> -->
-            </div>
-        
-        <div id="lettersEmpty">
-            
+
+        <section id="sounds" class="sound-panel" aria-label="Sons disponibles">
+            <button class="sound-button" type="button" data-sound-index="0" data-sound-cost="0" aria-label="Jouer le son 1 gratuit">
+                <span class="sound-button__play" aria-hidden="true"></span>
+                <span class="sound-button__label">Signal 01</span>
+                <span class="sound-button__price">Gratuit</span>
+                <span class="sound-button__lock" aria-hidden="true">
+                    <img src="Images/lock.webp" alt="">
+                    <span class="sound-button__unlock-text">
+                        Deverrouiller pour
+                        <strong>0</strong>
+                        <img src="Images/coins.webp" alt="">
+                    </span>
+                </span>
+            </button>
+            <button class="sound-button" type="button" data-sound-index="1" data-sound-cost="15" aria-label="Debloquer le son 2 pour 15 pieces">
+                <span class="sound-button__play" aria-hidden="true"></span>
+                <span class="sound-button__label">Signal 02</span>
+                <span class="sound-button__price">15 pieces</span>
+                <span class="sound-button__lock" aria-hidden="true">
+                    <img src="Images/lock.webp" alt="">
+                    <span class="sound-button__unlock-text">
+                        Deverrouiller pour
+                        <strong>15</strong>
+                        <img src="Images/coins.webp" alt="">
+                    </span>
+                </span>
+            </button>
+            <button class="sound-button" type="button" data-sound-index="2" data-sound-cost="30" aria-label="Debloquer le son 3 pour 30 pieces">
+                <span class="sound-button__play" aria-hidden="true"></span>
+                <span class="sound-button__label">Signal 03</span>
+                <span class="sound-button__price">30 pieces</span>
+                <span class="sound-button__lock" aria-hidden="true">
+                    <img src="Images/lock.webp" alt="">
+                    <span class="sound-button__unlock-text">
+                        Deverrouiller pour
+                        <strong>30</strong>
+                        <img src="Images/coins.webp" alt="">
+                    </span>
+                </span>
+            </button>
+        </section>
+
+        <section class="answer-zone" aria-label="Reponse en cours">
+            <div id="lettersEmpty" class="answer-slots"></div>
+        </section>
+
+        <section class="letters-zone" aria-label="Lettres disponibles">
+            <div id="letters" class="letter-bank"></div>
+        </section>
+
+        <p id="feedback" class="feedback-zone" aria-live="polite"></p>
+
+        <!-- Zone d'action bas de plateau : visible uniquement pendant une partie active.
+             Le bouton QUITTER ramene au menu et reinitialise completement la session. -->
+        <div id="quitZone" class="quit-zone" hidden>
+            <button id="quitButton" class="_btn _btn--quit" type="button"
+                    aria-label="Quitter la partie et retourner au menu">
+                QUITTER
+            </button>
         </div>
-        <div id="letters">
+    </main>
+
+    <section id="rewardOverlay" class="reward-overlay" aria-label="Recompense de manche" aria-live="polite" hidden>
+        <div class="reward-panel">
+            <p class="reward-panel__kicker">Coffre de recompense</p>
+            <button id="rewardChestButton" class="reward-chest" type="button" aria-label="Ouvrir le coffre" disabled>
+                <img id="rewardChestImage" src="Images/chest_close.webp" alt="">
+            </button>
+            <p id="rewardTicker" class="reward-ticker">?</p>
+            <p id="rewardAmount" class="reward-amount" hidden>
+                +<span id="rewardAmountValue">0</span>
+                <img src="Images/coins.webp" alt="pieces">
+            </p>
+            <button id="rewardContinue" class="_btn reward-continue" type="button" hidden>
+                Continuer
+            </button>
         </div>
-        
     </section>
-    <!-- MENU DE LANCEMENT -->
- 
-    <script type ="text/javascript"src="./Js/app.js"></script>
+
+    <section id="helpOverlay" class="help-overlay" aria-label="Aide du jeu" hidden>
+        <div class="help-panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+            <button id="helpClose" class="help-panel__close" type="button" aria-label="Fermer l'aide">
+                X
+            </button>
+            <p class="help-panel__kicker">Guide rapide</p>
+            <h2 id="helpTitle">Comment jouer</h2>
+            <ul>
+                <li>Ecoute le signal audio gratuit pour trouver une premiere piste.</li>
+                <li>Devine le mot cache avec les lettres proposees.</li>
+                <li>Clique sur une lettre en bas pour l'ajouter dans la reponse.</li>
+                <li>Clique sur une lettre deja posee dans le mot pour la retirer et corriger.</li>
+                <li>Gagne des pieces avec le coffre, puis utilise-les pour deverrouiller les signaux 02 et 03.</li>
+            </ul>
+        </div>
+    </section>
+
+    <script type="text/javascript" src="./Js/app.js"></script>
 </body>
 </html>
