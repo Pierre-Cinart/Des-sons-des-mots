@@ -38,8 +38,7 @@ const rewardContinue = document.querySelector("#rewardContinue");
 const helpButton = document.querySelector("#helpButton");
 const helpOverlay = document.querySelector("#helpOverlay");
 const helpClose = document.querySelector("#helpClose");
-// References au bouton quitter et a sa zone conteneur (visibles uniquement en partie)
-const quitZone = document.querySelector("#quitZone");
+// Bouton QUITTER : visible dans la zone d'action uniquement pendant une partie
 const quitButton = document.querySelector("#quitButton");
 // Boutons de controle de la banque de lettres
 const shuffleButton          = document.querySelector("#shuffleButton");
@@ -161,9 +160,8 @@ function init() {
     bonusLetterCost = 5;
     bonusSupCost    = 5;
 
-    // Affiche les zones de jeu actives : vies, VALIDER, QUITTER
+    // Affiche la zone d'action (vies + QUITTER) ; VALIDER est toujours visible dans answer-zone
     actionZone.hidden = false;
-    quitZone.hidden   = false;
 
     // Initialise l'affichage des vies pour la nouvelle partie
     renderLives();
@@ -806,7 +804,7 @@ function checkAntiCheat() {
 //      (clearTimeout) pour eviter que newGame() se declenche apres le retour au menu.
 //
 // Si pendingEndOfGame est vrai, on bascule sur l'ecran Felicitations au lieu du
-// prochain niveau. quitZone et actionZone sont masques avant l'overlay.
+// prochain niveau. actionZone est masque avant l'overlay.
 function continueAfterReward() {
     hideRewardOverlay();
 
@@ -815,7 +813,6 @@ function continueAfterReward() {
         // L'ID est stocke pour que quitGame() puisse annuler si le joueur quitte.
         cheatPenaltyTimer = setTimeout(() => { // 4 s pour lire le message
             if (pendingEndOfGame) {
-                quitZone.hidden   = true;
                 actionZone.hidden = true;
                 showCongrats();
                 return;
@@ -829,7 +826,6 @@ function continueAfterReward() {
     updateBestStats(currentLevel, getCoins());
 
     if (pendingEndOfGame) {
-        quitZone.hidden   = true;
         actionZone.hidden = true;
         showCongrats();
         return;
@@ -881,8 +877,7 @@ function quitGame() {
     menu.classList.remove("displayNone");
     document.body.classList.add("is-menu-open");
 
-    // 6. Cache les zones de jeu actif et les overlays de fin si presents
-    quitZone.hidden   = true;
+    // 6. Cache la zone d'action et les overlays de fin si presents
     actionZone.hidden = true;
     hideGameOver();
     hideCongrats();
@@ -1282,6 +1277,7 @@ function bonusRevealLetter() {
     const letter = currentWord[chosen.index].toUpperCase();
     chosen.slot.textContent = letter;
     chosen.slot.classList.add("letterEmpty--bonus");
+    playSyntheticReward([880, 1320, 1760], 0.18);
 
     // Retire la lettre de la banque en privilegiant un doublon leurre
     let removed = false;
@@ -1359,6 +1355,7 @@ function bonusRemoveDecoy() {
     const chosen = decoys[Math.trunc(Math.random() * decoys.length)];
     chosen.textContent = " ";
     chosen.setAttribute("aria-label", "Emplacement de lettre vide");
+    playSyntheticReward([880, 1320, 1760], 0.18);
 
     setFeedback("Lettre inutile supprimee !");
 }

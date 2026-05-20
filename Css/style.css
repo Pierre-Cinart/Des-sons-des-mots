@@ -134,11 +134,11 @@ img {
   z-index: 1;
   display: grid;
   align-content: start;
-  gap: 18px;
+  gap: 12px;
   width: min(1040px, calc(100% - 24px));
   min-height: calc(100vh - 72px);
-  margin: 14px auto 0;
-  padding: 18px 0 32px;
+  margin: 8px auto 0;
+  padding: 10px 0 12px;
 }
 
 .start-menu {
@@ -432,11 +432,33 @@ img {
   display: flex;
 }
 
-.answer-slots,
 .feedback-zone {
   border: 1px solid rgba(0, 255, 65, 0.18);
   border-radius: 14px;
   background: rgba(10, 14, 20, 0.92);
+}
+
+.feedback-zone:empty {
+  min-height: 0;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.answer-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  border-radius: 14px;
+  background: rgba(10, 14, 20, 0.92);
+  padding: 10px 14px;
+}
+
+.answer-zone > ._btn--validate {
+  width: 100%;
 }
 
 .answer-slots {
@@ -446,8 +468,8 @@ img {
   flex-wrap: wrap;
   gap: 8px;
   width: 100%;
-  min-height: 74px;
-  padding: 14px;
+  min-height: 62px;
+  padding: 10px;
 }
 
 .letterEmpty,
@@ -828,7 +850,7 @@ img {
   color: #00ff41;
 }
 
-/* ─── Zone d'action (vies + VALIDER) ────────────────────────────────────── */
+/* ─── Zone d'action (vies + QUITTER) ────────────────────────────────────── */
 
 .action-zone {
   display: flex;
@@ -986,19 +1008,6 @@ img {
   gap: 12px;
 }
 
-/* ─── Bouton QUITTER ──────────────────────────────────────────────────────── */
-
-/* Conteneur centre sous la zone de feedback */
-.quit-zone {
-  display: flex;
-  justify-content: center;
-  padding: 4px 0 8px;
-}
-
-/* Renforce [hidden] pour les anciens navigateurs */
-.quit-zone[hidden] {
-  display: none;
-}
 
 /* Variante danger : accent rouge pour signaler l'abandon de partie */
 ._btn--quit {

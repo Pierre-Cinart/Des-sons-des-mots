@@ -124,6 +124,10 @@
 
         <section class="answer-zone" aria-label="Reponse en cours">
             <div id="lettersEmpty" class="answer-slots"></div>
+            <button id="validateButton" class="_btn _btn--validate" type="button"
+                    aria-label="Valider la reponse">
+                VALIDER
+            </button>
         </section>
 
         <section class="letters-zone" aria-label="Lettres disponibles">
@@ -141,31 +145,21 @@
             </div>
         </section>
 
-        <!-- Zone de validation et de vies, visible pendant une manche active.
-             Les vies representent le total d'erreurs autorises sur toute la partie.
-             Le bouton VALIDER declenche la verification de la reponse.
-             Si la reponse est incomplete, la zone de reponse tremble. -->
+        <!-- Zone d'action : vies a gauche, bouton QUITTER a droite.
+             Visible uniquement pendant une partie active.
+             VALIDER est maintenant dans la zone de reponse (answer-zone). -->
         <div id="actionZone" class="action-zone" hidden>
             <div id="livesBar" class="lives-bar" aria-live="polite" aria-label="Vies restantes">
                 <span class="lives-bar__label">VIES</span>
                 <span id="livesIcons" class="lives-bar__icons" aria-hidden="true"></span>
             </div>
-            <button id="validateButton" class="_btn _btn--validate" type="button"
-                    aria-label="Valider la reponse">
-                VALIDER
-            </button>
-        </div>
-
-        <p id="feedback" class="feedback-zone" aria-live="polite"></p>
-
-        <!-- Zone d'action bas de plateau : visible uniquement pendant une partie active.
-             Le bouton QUITTER ramene au menu et reinitialise completement la session. -->
-        <div id="quitZone" class="quit-zone" hidden>
             <button id="quitButton" class="_btn _btn--quit" type="button"
                     aria-label="Quitter la partie et retourner au menu">
                 QUITTER
             </button>
         </div>
+
+        <p id="feedback" class="feedback-zone" aria-live="polite"></p>
     </main>
 
     <section id="rewardOverlay" class="reward-overlay" aria-label="Recompense de manche" aria-live="polite" hidden>
