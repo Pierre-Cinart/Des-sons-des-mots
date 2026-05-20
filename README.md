@@ -155,3 +155,6 @@ La feuille de route detaillee est maintenant disponible sous deux formes :
 
 Pour utiliser la version cliquable, lance le projet via un serveur local puis
 ouvre `todo.html`.
+
+
+reprise v1 front only
