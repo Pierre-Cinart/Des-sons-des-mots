@@ -320,8 +320,8 @@ img {
     gap: 14px;
     align-items: stretch;
     width: 100%;
-    min-height: 320px;
-    padding: 18px;
+    min-height: 0;
+    padding: 14px;
     border: 1px solid rgba(0, 212, 255, 0.18);
     border-radius: 18px;
     background: rgba(10, 14, 20, 0.76);
@@ -332,8 +332,8 @@ img {
     position: relative;
     display: grid;
     place-items: center;
-    min-height: 180px;
-    padding: 20px;
+    min-height: 130px;
+    padding: 14px 12px;
     border: 1px solid $color-border;
     border-radius: 14px;
     background:
@@ -350,8 +350,8 @@ img {
 .sound-button::before {
     content: "SIGNAL";
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: 8px;
+    left: 10px;
     color: $color-cyan;
     font-family: $font-mono;
     font-size: 0.68rem;
@@ -367,16 +367,16 @@ img {
 }
 
 .sound-button__label {
-    bottom: 40px;
+    bottom: 26px;
     color: $color-text-strong;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     letter-spacing: 0.12em;
 }
 
 .sound-button__price {
-    bottom: 14px;
+    bottom: 8px;
     color: $color-gold;
-    font-size: 0.72rem;
+    font-size: 0.64rem;
     letter-spacing: 0.1em;
 }
 
@@ -410,8 +410,8 @@ img {
 .sound-button__play {
     display: grid;
     place-items: center;
-    width: clamp(76px, 12vw, 116px);
-    height: clamp(76px, 12vw, 116px);
+    width: clamp(56px, 9vw, 82px);
+    height: clamp(56px, 9vw, 82px);
     border: 1px solid rgba(0, 255, 65, 0.36);
     border-radius: 50%;
     background: rgba(0, 255, 65, 0.08);
@@ -421,8 +421,8 @@ img {
 .sound-button__play::before {
     content: "";
     display: block;
-    width: 30px;
-    height: 34px;
+    width: 20px;
+    height: 24px;
     background: $color-green;
     clip-path: polygon(0 0, 100% 50%, 0 100%);
     filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.45));
@@ -974,19 +974,15 @@ img {
     }
 }
 
-// ─── Zone d'action (vies + QUITTER) ──────────────────────────────────────────
+// ─── Zone d'action (QUITTER) ─────────────────────────────────────────────────
 
-// Conteneur horizontal qui regroupe la barre de vies et le bouton QUITTER
+// Conteneur transparent qui aligne le bouton QUITTER a droite
 .action-zone {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     width: 100%;
-    padding: 8px 14px;
-    gap: 12px;
-    border: 1px solid $color-border;
-    border-radius: 14px;
-    background: $color-surface;
+    padding: 4px 0;
 }
 
 .action-zone[hidden] {
@@ -1401,10 +1397,6 @@ img {
         min-height: 26px;
         padding: 0 8px;
         font-size: 0.62rem;
-    }
-
-    .action-zone {
-        padding: 6px 12px;
     }
 
     .feedback-zone {

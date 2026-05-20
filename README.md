@@ -165,6 +165,52 @@ mais de rendre chaque partie plus claire :
 - `showCongrats()` / `hideCongrats()` symetriques a `showGameOver()` / `hideGameOver()`.
 - `restartGame()` et `quitGame()` ferment desormais les deux overlays de fin.
 
+### Etape 8 - Gameplay avance : bonus, animation, sons et vies
+
+- Son d'erreur (`error.ogg`) + animation de tremblement (`answer-shake`) sur la
+  zone reponse a chaque mauvaise reponse.
+- Systeme de vies : 3 erreurs maximum sur toute la partie, barre de vie visuelle
+  avec points verts / rouge, game over au troisieme echec.
+- Bouton Melanger : Fisher-Yates sur les boutons DOM de la banque de lettres,
+  avec animation vague en cascade (`letter--wave`, 35 ms de delai par lettre).
+  Meme animation au debut de chaque niveau.
+- Bonus Cadeau : revele une case vide avec la bonne lettre en cyan (verrouilee,
+  impossible a supprimer). Retire la lettre de la banque en privilegiant les
+  doublons leurres. Cout doublee a chaque achat.
+- Bonus Suppression : retire un leurre detecte par frequence (surplus disponible
+  vs necessaire). Cout double a chaque achat.
+- Les deux bonus jouent l'arpege synthetique montant [880, 1320, 1760 Hz] a
+  l'achat, comme pour le gain de 5 pieces.
+- Clic sur le `?` du ticker durant l'animation du coffre ouvre directement le
+  coffre (meme garde que le bouton image).
+
+### Etape 9 - Anti-triche avance et protection des records
+
+- Invariant earned / spent : `getCoins()` doit toujours etre egal a
+  `sessionEarned - sessionSpent`. Toute injection de pieces en console casse
+  l'invariant. Verifie en fin de chaque niveau dans `checkAntiCheat()`.
+- Confiscation totale des pieces, message rouge centre en `position: fixed`
+  (toujours visible sur petit ecran), son `error.ogg`, 4 secondes d'affichage.
+- `cheatPenaltyTimer` stocke l'ID du timeout : `quitGame()` l'annule via
+  `clearTimeout()` pour eviter que `newGame()` se declenche apres le retour
+  au menu (race condition).
+- `updateBestStats()` retire de `revealReward()` et deplace apres le controle
+  anti-triche dans `continueAfterReward()` : les faux scores ne s'enregistrent
+  plus. `showGameOver()` verifie aussi la coherence avant de sauvegarder.
+
+### Etape 10 - Reorganisation UI et responsive
+
+- VALIDER integre dans `.answer-zone` sous les cases, pleine largeur.
+- QUITTER prend la place de VALIDER dans `#actionZone` (a cote de VIES).
+  `#quitZone` supprime de HTML, CSS, SCSS et JS.
+- Espacement global resserre : `game-screen` gap 18 to 12 px, marges reduites.
+  `.feedback-zone:empty` collapse visuellement (plus de boite vide).
+- Correction du bug CSS (`@keyframes cheat-pulse` sans accolade fermante) qui
+  rendait toutes les regles `.is-menu-open` inoperantes.
+- Breakpoint 480 px : boutons sons en layout horizontal compact (icone + texte,
+  56 px de hauteur au lieu de 118 px). Lettres, paddings et fontes reduits pour
+  que la totalite du jeu tienne sur un ecran iPhone sans scroll.
+
 ## Lancer le jeu
 
 Le projet peut etre ouvert comme un site statique.
