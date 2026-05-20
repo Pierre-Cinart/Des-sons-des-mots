@@ -1203,10 +1203,140 @@ img {
     min-height: 0;
   }
   .sound-button {
-    min-height: 118px;
+    min-height: 90px;
   }
   .start-menu {
     top: 48%;
     padding: 24px 16px;
+  }
+}
+
+/* ─── Petit écran (≤480px — iPhone, petits Android) ──────────────────────── */
+@media (max-width: 480px) {
+
+  /* Header */
+  .game-status {
+    font-size: 0.7rem;
+    padding: 7px 38px 7px 10px;
+    margin-top: 6px;
+  }
+
+  /* Panneau sons : boutons en layout horizontal compact */
+  .sound-panel {
+    gap: 7px;
+    padding: 8px;
+  }
+
+  /* Chaque bouton passe en grille 2 colonnes : icone | label+prix */
+  .sound-button {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    grid-template-rows: 1fr 1fr;
+    column-gap: 10px;
+    align-items: center;
+    min-height: 0;
+    padding: 8px 12px;
+  }
+
+  /* Kicker "SIGNAL" masqué sur petit écran (la place manque) */
+  .sound-button::before {
+    display: none;
+  }
+
+  /* Icône lecture : colonne gauche, span les 2 lignes */
+  .sound-button__play {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Triangle de lecture plus petit */
+  .sound-button__play::before {
+    width: 16px;
+    height: 18px;
+  }
+
+  /* Libellé et prix : colonne droite, position statique (plus d'absolu) */
+  .sound-button__label {
+    grid-column: 2;
+    grid-row: 1;
+    position: static;
+    font-size: 0.67rem;
+    align-self: end;
+    bottom: auto;
+    left: auto;
+  }
+
+  .sound-button__price {
+    grid-column: 2;
+    grid-row: 2;
+    position: static;
+    font-size: 0.61rem;
+    align-self: start;
+    bottom: auto;
+    left: auto;
+  }
+
+  /* Zone réponse */
+  .answer-zone {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .answer-slots {
+    min-height: 52px;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  /* Cases lettres plus petites */
+  .letterEmpty {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  /* Banque de lettres */
+  .letter-bank {
+    min-height: 0;
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .letter {
+    width: 42px;
+    height: 42px;
+    font-size: 0.9rem;
+  }
+
+  /* Contrôles de lettres */
+  .letter-controls {
+    gap: 6px;
+    padding: 7px 10px 10px;
+  }
+
+  .letter-ctrl-btn {
+    min-height: 26px;
+    padding: 0 8px;
+    font-size: 0.62rem;
+  }
+
+  /* Zone d'action */
+  .action-zone {
+    padding: 6px 12px;
+  }
+
+  /* Feedback */
+  .feedback-zone {
+    font-size: 0.72rem;
+    min-height: 34px;
+    padding: 7px 12px;
+  }
+
+  /* Boutons génériques */
+  ._btn {
+    padding: 8px 18px;
+    font-size: 0.76rem;
   }
 }
