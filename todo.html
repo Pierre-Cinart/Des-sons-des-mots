@@ -55,34 +55,118 @@
     </main>
 
         <script>
+            // Injecte la progression de reference dans le localStorage au chargement.
+            // Ce bloc est mis a jour manuellement apres chaque etape validee.
+            // Source de verite : saves/des-sons-des-mots-progress.json
             (function () {
                 try {
                     const savedProgress = {
-                        "base-branch": true,
-                        "base-docs": true,
-                        "base-run": true,
-                        "html-title": true,
-                        "html-id-sounds": true,
-                        "html-buttons": true,
-                        "html-audio-buttons": true,
-                        "html-info": true,
-                        "html-zones": true,
-                        "vision-core": true,
-                        "vision-pawat": true,
-                        "rules-start-coins": true,
-                        "rules-20": true,
-                        "rules-50": true,
-                        "rules-free-sound": true,
-                        "rules-name": true,
-                        "design-palette": true,
-                        "coins-counter": true,
-                        "coins-future-x2": false,
-                        "coins-reward": true,
-                        "coins-feedback": true,
-                        "coins-no-negative": true,
-                        "bonus-20": true,
-                        "bonus-50": true,
-                        "bonus-disabled": true
+                        "base-branch":         true,
+                        "base-docs":           true,
+                        "base-run":            true,
+                        "base-bugs":           true,
+
+                        "vision-core":         true,
+                        "vision-pawat":        true,
+                        "vision-pedago":       true,
+                        "vision-difficulty":   true,
+                        "vision-backend":      false,
+
+                        "rules-start-coins":   true,
+                        "rules-bonus-replay":  false,
+                        "rules-free-sound":    true,
+                        "rules-20":            true,
+                        "rules-50":            true,
+                        "rules-name":          true,
+
+                        "html-title":          true,
+                        "html-id-sounds":      true,
+                        "html-buttons":        true,
+                        "html-audio-buttons":  true,
+                        "html-info":           true,
+                        "html-zones":          true,
+
+                        "design-palette":      true,
+                        "design-menu":         true,
+                        "design-board":        true,
+                        "design-mobile":       false,
+                        "design-tone":         true,
+
+                        "js-no-inline":        true,
+                        "js-events":           true,
+                        "js-state":            true,
+                        "js-globals":          true,
+                        "js-rdm":              true,
+                        "js-logs":             true,
+
+                        "data-file":           true,
+                        "data-neutral-ids":    true,
+                        "data-fields":         true,
+                        "data-shuffle":        true,
+                        "data-end":            true,
+
+                        "anti-audio-folders":  true,
+                        "anti-paths":          true,
+                        "anti-encoded":        true,
+                        "anti-decode":         true,
+                        "anti-scope":          true,
+                        "anti-doc":            true,
+
+                        "coins-counter":       true,
+                        "coins-state":         true,
+                        "coins-reward":        true,
+                        "coins-feedback":      true,
+                        "coins-no-negative":   true,
+                        "coins-future-x2":     false,
+
+                        "bonus-20":            true,
+                        "bonus-50":            true,
+                        "bonus-disabled":      true,
+                        "bonus-debit":         true,
+                        "bonus-owned":         true,
+                        "difficulty":          true,
+
+                        "audio-inventory":     false,
+                        "audio-clean":         false,
+                        "audio-volume":        false,
+                        "audio-format":        true,
+                        "audio-neutral":       true,
+                        "audio-player":        true,
+
+                        "a11y-keyboard":       true,
+                        "a11y-focus":          false,
+                        "a11y-labels":         true,
+                        "a11y-status":         true,
+                        "feedback-colors":     false,
+                        "feedback-end":        true,
+
+                        "docs-readme":         true,
+                        "docs-levels":         true,
+                        "docs-encode":         true,
+                        "docs-bonus":          false,
+                        "backend-roadmap":     false,
+
+                        "ui-error-fx":             true,
+                        "ui-shuffle-btn":           true,
+                        "ui-bonus-cadeau":          true,
+                        "ui-bonus-suppr":           true,
+                        "ui-bonus-cost-doubling":   true,
+                        "ui-wave-anim":             true,
+                        "ui-quit-btn":              true,
+                        "ui-gameover-overlay":      true,
+                        "ui-congrats-overlay":      true,
+                        "ui-ticker-click":          true,
+                        "anti-cheat-invariant":     true,
+                        "anti-cheat-penalty":       true,
+                        "anti-cheat-timer":         true,
+                        "records-localstorage":     true,
+
+                        "favicon":                  false,
+                        "design-mobile-overflow":   false,
+                        "audio-volume-norm":        false,
+                        "save-session":             false,
+                        "more-levels":              false,
+                        "backend-api":              false
                     };
 
                     window.localStorage.setItem(

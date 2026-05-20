@@ -170,6 +170,40 @@
         { "id": "docs-bonus", "label": "Documenter comment ajouter un son bonus." },
         { "id": "backend-roadmap", "label": "Garder une roadmap backend : sessions, validation serveur, pieces, pub, achat." }
       ]
+    },
+    {
+      "id": "step-11",
+      "title": "Etape 11 - Gameplay avance et securite",
+      "goal": "Enrichir les mecaniques de jeu et fermer les failles evidentes.",
+      "tasks": [
+        { "id": "ui-error-fx", "label": "Son d'erreur (error.ogg) + animation tremblement sur mauvaise reponse." },
+        { "id": "ui-shuffle-btn", "label": "Bouton Melanger : Fisher-Yates sur les boutons du DOM + vague d'animation." },
+        { "id": "ui-bonus-cadeau", "label": "Bonus Cadeau : revele une case correcte en cyan (verrouilee, retiree de la banque)." },
+        { "id": "ui-bonus-suppr", "label": "Bonus Suppression : retire un leurre detecete par exces de frequence." },
+        { "id": "ui-bonus-cost-doubling", "label": "Couts des bonus doublent a chaque achat sur toute la partie." },
+        { "id": "ui-wave-anim", "label": "Animation vague (letter--wave) sur les lettres au debut de chaque niveau." },
+        { "id": "ui-quit-btn", "label": "Bouton QUITTER visible uniquement pendant une partie active." },
+        { "id": "ui-gameover-overlay", "label": "Overlay Game Over : score final, boutons Recommencer et Quitter." },
+        { "id": "ui-congrats-overlay", "label": "Overlay Felicitations : affiche quand tous les mots de la session sont trouves." },
+        { "id": "ui-ticker-click", "label": "Clic sur le ? du ticker pour ouvrir le coffre (rewardTicker.addEventListener)." },
+        { "id": "anti-cheat-invariant", "label": "Anti-triche invariant : getCoins() doit etre exactement egal a earned - spent." },
+        { "id": "anti-cheat-penalty", "label": "Anti-triche : message rouge centre en position fixe + son erreur + confiscation." },
+        { "id": "anti-cheat-timer", "label": "Anti-triche : cheatPenaltyTimer stocke pour clearTimeout dans quitGame()." },
+        { "id": "records-localstorage", "label": "Records meilleur niveau et pieces max sauvegardes dans localStorage." }
+      ]
+    },
+    {
+      "id": "step-12",
+      "title": "Etape 12 - Prochaines ameliorations",
+      "goal": "Aller vers une version plus complete et stable.",
+      "tasks": [
+        { "id": "favicon", "label": "Ajouter un favicon.ico pour eviter l'erreur 404 en console." },
+        { "id": "design-mobile-overflow", "label": "Regler le contenu coupe sur petits ecrans (scroll, breakpoints)." },
+        { "id": "audio-volume-norm", "label": "Normaliser les volumes de tous les fichiers audio (-14 LUFS cible)." },
+        { "id": "save-session", "label": "Sauvegarder les pieces et le niveau entre deux sessions (localStorage)." },
+        { "id": "more-levels", "label": "Ajouter au moins 10 nouveaux niveaux audio dans easy / medium / hard." },
+        { "id": "backend-api", "label": "Premier endpoint backend : validation de reponse et stockage de score." }
+      ]
     }
   ]
 }

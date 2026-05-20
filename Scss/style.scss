@@ -226,6 +226,38 @@ img {
     line-height: 1.5;
 }
 
+// Bloc de records affiche dans le menu si au moins une partie a ete jouee
+.start-menu__best-stats {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 auto 18px;
+    padding: 8px 16px;
+    border: 1px solid rgba(0, 212, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(0, 212, 255, 0.06);
+    color: $color-text-soft;
+    font-family: $font-mono;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.start-menu__best-stats strong {
+    color: $color-gold;
+    text-shadow: 0 0 10px rgba(255, 209, 102, 0.22);
+}
+
+.best-stats__sep {
+    color: $color-border-strong;
+}
+
+.start-menu__best-stats[hidden] {
+    display: none;
+}
+
 .start-menu__actions {
     display: flex;
     justify-content: center;
@@ -445,7 +477,6 @@ img {
 }
 
 .answer-slots,
-.letter-bank,
 .feedback-zone {
     border: 1px solid $color-border;
     border-radius: 14px;
@@ -471,8 +502,9 @@ img {
     color: $color-text-strong;
     background: rgba(15, 22, 32, 0.95);
     border: 1px solid rgba(0, 212, 255, 0.2);
-    font-family: $font-title;
-    font-weight: 900;
+    /* Exo 2 a la place d'Orbitron : meilleure lisibilite sur les petites touches */
+    font-family: $font-body;
+    font-weight: 700;
     cursor: pointer;
     transition:
         transform 0.18s ease,
@@ -487,6 +519,14 @@ img {
     color: $color-gold;
 }
 
+// Case revelee par le bonus lettre : cyan, verrouillée (non supprimable par le joueur)
+.letterEmpty--bonus {
+    border-color: rgba(0, 212, 255, 0.72);
+    background: rgba(0, 212, 255, 0.14);
+    color: $color-cyan;
+    cursor: default;
+}
+
 .letterEmpty--good {
     border-color: rgba(0, 255, 65, 0.62);
     background: rgba(0, 255, 65, 0.18);
@@ -497,6 +537,89 @@ img {
     border-color: rgba(255, 79, 116, 0.72);
     background: rgba(255, 79, 116, 0.16);
     color: $color-red;
+}
+
+// ─── Zone de lettres (bloc unifie) ───────────────────────────────────────────
+
+// La section entiere forme un seul encadrement : lettres + barre de controles
+.letters-zone {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid $color-border;
+    border-radius: 14px;
+    background: $color-surface;
+    overflow: hidden;
+}
+
+// Barre de controles sous la banque : mélange + bonus, séparés par un trait discret
+.letter-controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px 14px;
+    border-top: 1px solid $color-border;
+}
+
+// Bouton de controle generique : compact, police mono, variante de couleur selon usage
+.letter-ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0 12px;
+    border: 1px solid rgba(0, 212, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(0, 212, 255, 0.07);
+    color: $color-cyan;
+    cursor: pointer;
+    font-family: $font-mono;
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.letter-ctrl-btn:hover,
+.letter-ctrl-btn:focus-visible {
+    outline: none;
+    border-color: $color-cyan;
+    box-shadow: 0 0 14px rgba(0, 212, 255, 0.2);
+}
+
+// Variante or : bonus lettre (couleur pieces pour le lien visuel)
+.letter-ctrl-btn--gold {
+    border-color: rgba(255, 209, 102, 0.32);
+    background: rgba(255, 209, 102, 0.07);
+    color: $color-gold;
+}
+
+.letter-ctrl-btn--gold:hover,
+.letter-ctrl-btn--gold:focus-visible {
+    border-color: $color-gold;
+    box-shadow: 0 0 14px rgba(255, 209, 102, 0.2);
+}
+
+// Variante orange : bonus suppression (action destructive)
+.letter-ctrl-btn--orange {
+    border-color: rgba(255, 107, 53, 0.32);
+    background: rgba(255, 107, 53, 0.07);
+    color: $color-orange;
+}
+
+.letter-ctrl-btn--orange:hover,
+.letter-ctrl-btn--orange:focus-visible {
+    border-color: $color-orange;
+    box-shadow: 0 0 14px rgba(255, 107, 53, 0.2);
+}
+
+.letter-ctrl-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 .letter-bank {
@@ -536,6 +659,30 @@ img {
     font-family: $font-mono;
     text-align: center;
     letter-spacing: 0.04em;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+// Etat anti-triche : centré à l'écran, toujours au-dessus du contenu
+.feedback-zone--cheat {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+    width: calc(100% - 48px);
+    max-width: 600px;
+    border-color: rgba(255, 79, 116, 0.72) !important;
+    background: rgba(255, 79, 116, 0.18) !important;
+    color: $color-red !important;
+    font-weight: 700;
+    font-size: 1.1em;
+    animation: cheat-pulse 0.6s ease 4;
+}
+
+@keyframes cheat-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255, 79, 116, 0.5); }
+    50%  { box-shadow: 0 0 0 8px rgba(255, 79, 116, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 79, 116, 0); }
 }
 
 .is-menu-open .game-status,
@@ -635,6 +782,7 @@ img {
     font-size: 3.2rem;
     font-weight: 900;
     text-shadow: 0 0 16px rgba(255, 209, 102, 0.3);
+    cursor: pointer;
 }
 
 .reward-amount {
@@ -741,6 +889,30 @@ img {
     color: $color-green;
 }
 
+@keyframes letter-wave {
+    0%   { transform: translateY(0)    scale(1); }
+    35%  { transform: translateY(-10px) scale(1.18); }
+    65%  { transform: translateY(3px)  scale(0.93); }
+    100% { transform: translateY(0)    scale(1); }
+}
+
+// Classe ajoutee temporairement par JS sur chaque lettre lors du melange.
+// animationDelay est pose inline pour decaler chaque lettre et former la vague.
+.letter--wave {
+    animation: letter-wave 0.38s ease both;
+}
+
+@keyframes answer-shake {
+    0%   { transform: translateX(0); }
+    15%  { transform: translateX(-7px); }
+    30%  { transform: translateX(7px); }
+    45%  { transform: translateX(-5px); }
+    60%  { transform: translateX(5px); }
+    75%  { transform: translateX(-3px); }
+    90%  { transform: translateX(2px); }
+    100% { transform: translateX(0); }
+}
+
 @keyframes scan-line {
     from {
         transform: translateY(-2px);
@@ -777,6 +949,179 @@ img {
     }
 }
 
+// ─── Zone d'action (vies + VALIDER) ──────────────────────────────────────────
+
+// Conteneur horizontal qui regroupe la barre de vies et le bouton VALIDER
+.action-zone {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 14px;
+    gap: 12px;
+    border: 1px solid $color-border;
+    border-radius: 14px;
+    background: $color-surface;
+}
+
+.action-zone[hidden] {
+    display: none;
+}
+
+// Barre de vies : label + icones
+.lives-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-mono;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: $color-text-soft;
+    text-transform: uppercase;
+}
+
+// Conteneur des trois icones de vie
+.lives-bar__icons {
+    display: flex;
+    gap: 6px;
+}
+
+// Icone de vie individuelle : cercle neon quand active, rouge quand perdue
+.life-icon {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: $color-green;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.45);
+    transition:
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.life-icon--lost {
+    background: rgba(255, 79, 116, 0.35);
+    box-shadow: 0 0 6px rgba(255, 79, 116, 0.25);
+}
+
+// Variante "confirmer" du bouton standard : vert plus marque pour l'action principale
+._btn--validate {
+    border-color: rgba(0, 255, 65, 0.5);
+    background: linear-gradient(90deg, rgba(0, 255, 65, 0.18), rgba(0, 212, 255, 0.12));
+    color: $color-green;
+    box-shadow: 0 0 14px rgba(0, 255, 65, 0.18);
+}
+
+._btn--validate:hover,
+._btn--validate:focus-visible {
+    outline: none;
+    border-color: $color-green;
+    color: $color-green;
+    box-shadow: 0 0 26px rgba(0, 255, 65, 0.32);
+}
+
+// Animation de tremblement pour la zone reponse quand incomplete
+// Declenchee par JS en ajoutant la classe .answer-slots--shake
+.answer-slots--shake {
+    animation: answer-shake 0.46s ease;
+}
+
+// ─── Game Over ────────────────────────────────────────────────────────────────
+
+// Overlay sombre couvrant tout l'ecran
+.gameover-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(5, 7, 9, 0.86);
+    backdrop-filter: blur(6px);
+}
+
+.gameover-overlay[hidden] {
+    display: none;
+}
+
+// Panneau central encadre en rouge
+.gameover-panel {
+    width: min(440px, 100%);
+    padding: 30px 24px;
+    border: 1px solid rgba(255, 79, 116, 0.42);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(15, 22, 32, 0.97), rgba(5, 7, 9, 0.95));
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 79, 116, 0.2);
+    text-align: center;
+}
+
+.gameover-panel__kicker {
+    margin-bottom: 8px;
+    color: $color-red;
+    font-family: $font-mono;
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.gameover-panel h2 {
+    margin-bottom: 24px;
+    color: $color-text-strong;
+    font-family: $font-title;
+    font-size: 2.4rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(255, 79, 116, 0.28);
+}
+
+// Grille des statistiques finales (niveau et pieces cote a cote)
+.gameover-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 28px;
+}
+
+.gameover-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.gameover-stat__label {
+    color: $color-text-soft;
+    font-family: $font-mono;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.gameover-stat strong {
+    color: $color-gold;
+    font-family: $font-title;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
+}
+
+.gameover-coin-icon {
+    display: inline-block;
+    width: 22px;
+    margin-top: 4px;
+    filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.3));
+}
+
+// Conteneur des deux boutons d'action apres game over
+.gameover-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
 // ─── Bouton QUITTER ────────────────────────────────────────────────────────
 
 // Conteneur centre sous la zone de feedback
@@ -806,6 +1151,122 @@ img {
     border-color: $color-red;
     color: $color-red;
     box-shadow: 0 0 24px rgba(255, 79, 116, 0.28);
+}
+
+// ─── Felicitations ────────────────────────────────────────────────────────────
+
+// Overlay plein ecran, meme structure que gameover mais avec accent vert/cyan
+.congrats-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(5, 7, 9, 0.86);
+    backdrop-filter: blur(6px);
+}
+
+.congrats-overlay[hidden] {
+    display: none;
+}
+
+// Panneau central encadre en vert neon : victoire, session complete
+.congrats-panel {
+    width: min(480px, 100%);
+    padding: 30px 24px;
+    border: 1px solid rgba(0, 255, 65, 0.42);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(15, 22, 32, 0.97), rgba(5, 7, 9, 0.95));
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 255, 65, 0.2);
+    text-align: center;
+}
+
+.congrats-panel__kicker {
+    margin-bottom: 8px;
+    color: $color-cyan;
+    font-family: $font-mono;
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.congrats-panel h2 {
+    margin-bottom: 24px;
+    color: $color-text-strong;
+    font-family: $font-title;
+    font-size: 2.4rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(0, 255, 65, 0.32);
+}
+
+.congrats-panel__msg {
+    margin-bottom: 20px;
+    color: $color-cyan;
+    font-family: $font-mono;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+}
+
+// Grille des statistiques finales (meme structure que gameover-stats)
+.congrats-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 20px;
+}
+
+.congrats-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.congrats-stat__label {
+    color: $color-text-soft;
+    font-family: $font-mono;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.congrats-stat strong {
+    color: $color-gold;
+    font-family: $font-title;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
+}
+
+// Invitation a contacter Pawat
+.congrats-panel__contact {
+    margin-bottom: 20px;
+    color: $color-text-soft;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.congrats-contact-link {
+    color: $color-cyan;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.congrats-contact-link:hover,
+.congrats-contact-link:focus-visible {
+    color: $color-green;
+    outline: none;
+}
+
+.congrats-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 @media (max-width: 720px) {
