@@ -93,4 +93,11 @@ devra suivre une procedure simple :
 
 ## Roadmap
 
-La feuille de route detaillee est dans `TODO.md`.
+La feuille de route detaillee est maintenant disponible sous deux formes :
+
+- `todo.html` : checklist cliquable avec sauvegarde locale et export/import JSON.
+- `Data/todo-roadmap.json` : source de donnees de la roadmap.
+- `TODO.md` : note courte qui explique comment utiliser le suivi.
+
+Pour utiliser la version cliquable, lance le projet via un serveur local puis
+ouvre `todo.html`.

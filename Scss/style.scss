@@ -1,93 +1,122 @@
-// declarartion des variables
-//config ._btn
-$bodyBgColor :  blue;
-$btnColor : white;
-$btnBgColor : gray;
-$btnBorderStyle : 1px solid black;
-$btnWidth : 100px;
-$btnHeight : 30px;
-$btnGap : 5px;
-// config #_screen
-$screenWidth : 100%;
-$screenHeight : 100vh;
-$screenBgColor : black;
-// config #images
-$imgBorderStyle : 1px solid yellow;
-$imgHoverBorderStyle : 1px solid green;
+// Etape 1 : styles de transition.
+// Le design Pawat Labz complet arrivera a l'etape 2. Ici, on garde une base
+// proche du jeu original, mais compatible avec le HTML nettoye.
 
-*{
-    margin: 0px;
-    padding: 0px;
+$bodyBgColor: blue;
+$btnColor: white;
+$btnBgColor: gray;
+$btnBorderStyle: 1px solid black;
+$btnWidth: 120px;
+$btnHeight: 36px;
+$btnGap: 8px;
+$screenWidth: 100%;
+$screenMinHeight: 100vh;
+$screenBgColor: black;
+$imgBorderStyle: 1px solid yellow;
+$imgHoverBorderStyle: 1px solid green;
+
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     user-select: none;
 }
 
-body{
-
+body {
     position: relative;
     width: 100%;
     min-width: 290px;
-    height: 100vh;
+    min-height: 100vh;
     background-color: $bodyBgColor;
-    overflow: hidden;
 }
 
-#infoBar {
+button {
+    font: inherit;
+}
+
+.game-status {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
     width: 100%;
-    height: auto;
+    padding: 6px 10px;
     background-color: black;
     color: yellow;
 }
 
-#menu {
-    width: 90%;
-    height: 300px;
-    position: absolute;
-    top:30%;
-    left:50%;
-    transform: translate(-50%,0%);
-    background-color: rgba(52, 61, 60, 0.888);
-    border-radius: 20%;
-    border: 1px solid white;
-    text-align: center;
-}
-
-#menu h1 {
-    margin: 30px auto 10px auto;
-}
-
-._btn {  
-    margin: auto;
-    margin-bottom: $btnGap;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    font-weight: bolder;
-    width: $btnWidth;
-    height: $btnHeight;
-    color: $btnColor;
-    background-color: $btnBgColor;
-    border: $btnBorderStyle;  
-    scale: 0.95;
-    transition-duration: 0.25s;    
-}
-
-._btn:hover {
-    scale: 1;
-    transition-duration: 0.25s;
-}
-
-#_screen {
+.game-screen {
+    position: relative;
     width: $screenWidth;
-    height: $screenHeight;
+    min-height: $screenMinHeight;
     margin: auto;
     border: $btnBorderStyle;
     background-color: $screenBgColor;
     min-width: 290px;
+    padding-bottom: 24px;
 }
 
-#_sounds {
+.start-menu {
+    width: 90%;
+    max-width: 420px;
+    min-height: 300px;
+    position: absolute;
+    z-index: 10;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    padding: 28px 18px;
+    background-color: rgba(52, 61, 60, 0.94);
+    border-radius: 24px;
+    border: 1px solid white;
+    text-align: center;
+}
+
+.start-menu h1 {
+    margin: 0 auto 18px;
+}
+
+.start-menu__actions {
+    display: grid;
+    justify-content: center;
+    gap: $btnGap;
+}
+
+._btn {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bolder;
+    width: $btnWidth;
+    min-height: $btnHeight;
+    color: $btnColor;
+    background-color: $btnBgColor;
+    border: $btnBorderStyle;
+    cursor: pointer;
+    scale: 0.95;
+    transition-duration: 0.25s;
+}
+
+._btn:hover,
+._btn:focus-visible {
+    outline: none;
+    scale: 1;
+    transition-duration: 0.25s;
+    border-color: yellow;
+}
+
+.info-panel {
+    margin-top: 18px;
+    color: white;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.info-panel p {
+    margin-bottom: 10px;
+}
+
+.sound-panel {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -95,25 +124,35 @@ body{
     width: 90%;
     min-width: 290px;
     max-width: 680px;
-    height: 60vh;
-    margin: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    min-height: 52vh;
+    margin: 5px auto;
     border: $imgBorderStyle;
-    img {
-        width: 128px;
-        height: 128px;
-        border: $imgBorderStyle;
-        border-radius: 50%;
-    }
-    img:hover {
-        width: 128px;
-        height: 128px;
-        border: $imgHoverBorderStyle;
-    }
 }
 
-#lettersEmpty {
+.sound-button {
+    width: 128px;
+    height: 128px;
+    padding: 0;
+    border: $imgBorderStyle;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+}
+
+.sound-button:hover,
+.sound-button:focus-visible {
+    outline: none;
+    border: $imgHoverBorderStyle;
+}
+
+.sound-button img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 50%;
+}
+
+.answer-slots {
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -121,22 +160,41 @@ body{
     gap: 2px;
     width: 90%;
     max-width: 400px;
-    height: 30px;
-    margin: 10px auto ;
+    min-height: 34px;
+    margin: 10px auto;
     background-color: yellow;
-    border-radius: 20%;
-    p {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        background-color: wheat;
-        font-weight: 900;
-    }
+    border-radius: 20px;
 }
 
-#letters {
+.letterEmpty,
+.letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    background-color: wheat;
+    border: $imgBorderStyle;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.letterEmpty {
+    width: 30px;
+    height: 30px;
+    border: 0;
+}
+
+.letterEmpty--good {
+    background-color: green;
+    color: white;
+}
+
+.letterEmpty--wrong {
+    background-color: red;
+    color: white;
+}
+
+.letter-bank {
     cursor: pointer;
     width: 75%;
     max-width: 230px;
@@ -147,21 +205,32 @@ body{
     align-items: center;
     gap: 5px;
     text-align: center;
-    p {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        background-color: wheat;
-        border: $imgBorderStyle;
-        border-radius: 10%;
-    }
 }
-#menu{
-    max-width: 400px;
-    
+
+.letter {
+    width: 40px;
+    height: 40px;
+    border-radius: 10%;
 }
+
+.letter:hover,
+.letter:focus-visible,
+.letterEmpty:hover,
+.letterEmpty:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+.feedback-zone {
+    min-height: 24px;
+    width: 90%;
+    max-width: 520px;
+    margin: 12px auto 0;
+    color: white;
+    text-align: center;
+    font-weight: 700;
+}
+
 .displayNone {
     display: none;
 }

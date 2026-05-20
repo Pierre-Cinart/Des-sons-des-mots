@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap - Des sons et des mots</title>
+    <link rel="stylesheet" href="./Css/todo-tracker.css">
+</head>
+<body>
+    <main class="tracker-shell">
+        <header class="tracker-hero">
+            <p class="tracker-kicker">PAWAT LABZ / ROADMAP</p>
+            <h1>Refonte Des sons et des mots</h1>
+            <p class="tracker-intro">
+                Checklist cliquable pour suivre la refonte pedagogique du jeu,
+                avec progression sauvegardee localement et export JSON.
+            </p>
+
+            <div class="tracker-actions" aria-label="Actions de suivi">
+                <button class="tracker-button tracker-button--primary" type="button" data-export-progress>
+                    Exporter progression
+                </button>
+                <label class="tracker-button tracker-button--ghost">
+                    Importer progression
+                    <input type="file" accept="application/json" data-import-progress>
+                </label>
+                <button class="tracker-button tracker-button--danger" type="button" data-reset-progress>
+                    Reset local
+                </button>
+            </div>
+        </header>
+
+        <section class="tracker-dashboard" aria-label="Progression globale">
+            <article class="tracker-stat">
+                <span class="tracker-stat__label">Progression</span>
+                <strong data-progress-percent>0%</strong>
+            </article>
+            <article class="tracker-stat">
+                <span class="tracker-stat__label">Taches faites</span>
+                <strong data-progress-count>0 / 0</strong>
+            </article>
+            <article class="tracker-stat">
+                <span class="tracker-stat__label">Branche</span>
+                <strong data-roadmap-branch>dev</strong>
+            </article>
+        </section>
+
+        <section class="tracker-progress" aria-label="Barre de progression">
+            <span data-progress-bar></span>
+        </section>
+
+        <section class="tracker-list" data-roadmap-list aria-live="polite">
+            <p class="tracker-loading">Chargement de la roadmap...</p>
+        </section>
+    </main>
+
+    <script src="./Js/todo-tracker.js" defer></script>
+</body>
+</html>

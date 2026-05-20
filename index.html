@@ -8,46 +8,70 @@
     <title>Des sons et des mots</title>
 </head>
 <body>
-<!-- HEADER -->
-    <header id="infoBar"> 
-        <p> niveau : </p>
+    <!--
+        Header de partie.
+        Pour l'etape 1, on garde seulement les emplacements utiles :
+        niveau, pieces et messages. Les vraies regles de pieces arriveront plus tard.
+    -->
+    <header id="infoBar" class="game-status" aria-label="Informations de partie">
+        <p>Niveau : <span id="levelValue">0</span></p>
+        <p>Pieces : <span id="coinValue">0</span></p>
     </header>
 
-<!-- ECRAN DE JEU -->
-    <section id ="_screen">
-        <section>
-            <div id="menu"> 
-                <h1>DES SONS ET DE MOTS</h1>
-                <p class="_btn" onclick="newGame()">
+    <!--
+        Ecran principal du jeu.
+        Les zones sont separees des maintenant pour faciliter les prochaines etapes :
+        menu, sons, reponse, lettres et feedback.
+    -->
+    <main id="screen" class="game-screen">
+        <section id="menu" class="start-menu" aria-labelledby="gameTitle">
+            <h1 id="gameTitle">DES SONS ET DES MOTS</h1>
+
+            <div class="start-menu__actions">
+                <button class="_btn" type="button" data-start-game>
                     JOUER
+                </button>
+                <button class="_btn" type="button" data-toggle-info aria-expanded="false" aria-controls="infoTxt">
+                    INFOS
+                </button>
+            </div>
+
+            <aside id="infoTxt" class="info-panel" hidden>
+                <p>
+                    Dans ce jeu vous devez ecouter des sons et en deduire le mot avec les lettres proposees.
                 </p>
-                <p class="_btn" onclick="showInfo()">INFOS</p>
-                <div id="infoTxt" style="display: none; position: absolute; color:white;font-size: 30px;">
-                    <p>
-                        Dans ce jeu vous devez écouter des sons et en déduire le mot avec les lettres proposées <br>
-                        Ce jeu est en cours de développement <br> 
-                    </p>
-                    <p class = "_btn" onclick="showInfo()"> fermer </p>
-                </div>
-            </div>
+                <p>
+                    Ce jeu est en cours de refonte pedagogique.
+                </p>
+                <button class="_btn" type="button" data-toggle-info>
+                    Fermer
+                </button>
+            </aside>
         </section>
-        
-            <div id="_sounds">
-                <img src="Images/play.png" onclick = "playSound(0)"alt="Images/play.png">
-                <img src="Images/play.png" onclick = "playSound(1)"alt="Images/play.png">
-                <img src="Images/play.png" onclick = "playSound(2)" alt="Images/play.png">
-                <!-- <img src="Images/play.png" onclick = "playSound(3)" alt="Images/play.png"> -->
-            </div>
-        
-        <div id="lettersEmpty">
-            
-        </div>
-        <div id="letters">
-        </div>
-        
-    </section>
-    <!-- MENU DE LANCEMENT -->
- 
-    <script type ="text/javascript"src="./Js/app.js"></script>
+
+        <section id="sounds" class="sound-panel" aria-label="Sons disponibles">
+            <button class="sound-button" type="button" data-sound-index="0" aria-label="Jouer le son 1">
+                <img src="Images/play.png" alt="" aria-hidden="true">
+            </button>
+            <button class="sound-button" type="button" data-sound-index="1" aria-label="Jouer le son 2">
+                <img src="Images/play.png" alt="" aria-hidden="true">
+            </button>
+            <button class="sound-button" type="button" data-sound-index="2" aria-label="Jouer le son 3">
+                <img src="Images/play.png" alt="" aria-hidden="true">
+            </button>
+        </section>
+
+        <section class="answer-zone" aria-label="Reponse en cours">
+            <div id="lettersEmpty" class="answer-slots"></div>
+        </section>
+
+        <section class="letters-zone" aria-label="Lettres disponibles">
+            <div id="letters" class="letter-bank"></div>
+        </section>
+
+        <p id="feedback" class="feedback-zone" aria-live="polite"></p>
+    </main>
+
+    <script type="text/javascript" src="./Js/app.js"></script>
 </body>
 </html>
