@@ -1,6 +1,21 @@
-// Etape 2 : economie de pieces locale, menu enrichi et brouillage simple des donnees.
-// Le but n'est pas de rendre la triche impossible en front, mais de cacher les donnees
-// sensibles les plus evidentes pour eviter la lecture immediate en console.
+// Des Sons & Des Mots — Pawat Labz
+// Moteur de jeu complet : economie de pieces, niveaux par tiers, brouillage XOR+base64,
+// systeme de vies, coffre de recompense, bonus (cadeau / suppression leurre / melange),
+// anti-triche par invariant earned/spent, overlays Game Over et Felicitations.
+//
+// Architecture front-only : la securite sert a brouiller les pistes en console,
+// pas a remplacer un futur backend. Voir levels-data.js pour encoder de nouveaux mots.
+//
+// Flux principal d'une manche :
+//   newGame() → placeLetters() → renderAvailableLetters() → renderAnswerSlots()
+//   → joueur ecoute / pose des lettres → validateAnswer() → testWord()
+//   → handleGoodAnswer() → showRewardOverlay() → openRewardChest() → revealReward()
+//   → continueAfterReward() → newGame() (ou showCongrats si fin de session)
+//
+// Flux anti-triche (fin de chaque niveau) :
+//   continueAfterReward() → checkAntiCheat()
+//   Invariant : getCoins() doit etre exactement egal a sessionEarned - sessionSpent.
+//   Toute injection console detectee → confiscation totale + message + son d'erreur.
 
 // Recuperation des elements fixes du DOM.
 const infoBar = document.querySelector("#infoBar");
@@ -584,8 +599,13 @@ function showGameOver() {
     roundResolved = true;
     stopActiveAudio();
 
-    // Sauvegarde les records avant d'afficher l'ecran de fin
-    updateBestStats(currentLevel, getCoins());
+    // Sauvegarde les records uniquement si les pieces sont coherentes.
+    // Un joueur ayant injecte des pieces puis perdu volontairement ne doit pas
+    // voir son faux total enregistre : on enregistre 0 en cas d'incoherence.
+    const coinsForRecord = (getCoins() === sessionEarned - sessionSpent)
+        ? getCoins()
+        : 0;
+    updateBestStats(currentLevel, coinsForRecord);
 
     // Affiche le score de la session
     gameOverLevel.textContent = String(currentLevel);
@@ -735,9 +755,10 @@ function revealReward() {
     sessionEarned += pendingReward; // seul point legitime d'ajout de pieces
     addCoins(pendingReward);
 
-    // Met a jour les records apres avoir credite les pieces du coffre.
-    // On passe le niveau courant et le total de pieces pour ce round.
-    updateBestStats(currentLevel, getCoins());
+    // Pas de updateBestStats ici : les pieces viennent d'etre creditees mais
+    // l'invariant anti-triche n'a pas encore ete verifie. Si le joueur a injecte
+    // des pieces en console, on enregistrerait un faux record. Le save se fait
+    // dans continueAfterReward(), seulement apres que checkAntiCheat() est passe.
 
     rewardContinue.focus();
 }
@@ -765,20 +786,34 @@ function checkAntiCheat() {
             stolen + " piece(s) confisquee(s)."
         );
         feedback.classList.add("feedback-zone--cheat");
+
+        fx.currentTime = 0;
+        fx.src = "./Audio/fx/error.ogg";
+        safePlay(fx);
+
         return true; // triche detectee
     }
 
     return false;
 }
 
+// Transition entre la recompense et le niveau suivant (ou la fin de session).
+//
+// Si une triche est detectee :
+//   1. checkAntiCheat() confisque les pieces, affiche le message centre.
+//   2. On attend 4 s (cheatPenaltyTimer) pour laisser le joueur lire le message.
+//   3. Si le joueur clique QUITTER pendant ces 4 s, quitGame() annule le timer
+//      (clearTimeout) pour eviter que newGame() se declenche apres le retour au menu.
+//
+// Si pendingEndOfGame est vrai, on bascule sur l'ecran Felicitations au lieu du
+// prochain niveau. quitZone et actionZone sont masques avant l'overlay.
 function continueAfterReward() {
     hideRewardOverlay();
 
     if (checkAntiCheat()) {
-        // Triche detectee : on laisse le message visible 2,5 s avant de continuer.
-        // L'ID est stocke pour que quitGame() puisse l'annuler si le joueur quitte
-        // pendant la fenetre d'attente (evite newGame() post-menu).
-        cheatPenaltyTimer = setTimeout(() => {
+        // Triche detectee : message visible 4 s, puis niveau suivant (ou congrats).
+        // L'ID est stocke pour que quitGame() puisse annuler si le joueur quitte.
+        cheatPenaltyTimer = setTimeout(() => { // 4 s pour lire le message
             if (pendingEndOfGame) {
                 quitZone.hidden   = true;
                 actionZone.hidden = true;
@@ -786,9 +821,12 @@ function continueAfterReward() {
                 return;
             }
             newGame();
-        }, 2500);
+        }, 4000);
         return;
     }
+
+    // Anti-triche passe : les pieces sont legitimes, on peut enregistrer le record.
+    updateBestStats(currentLevel, getCoins());
 
     if (pendingEndOfGame) {
         quitZone.hidden   = true;
@@ -1186,7 +1224,18 @@ function updateSoundButtons() {
     });
 }
 
-// ─── Bonus ────────────────────────────────────────────────────────────────────
+// ─── Shuffle & Bonus ─────────────────────────────────────────────────────────
+//
+// Trois outils payants aident le joueur bloque :
+//   ↺ Melanger  — gratuit, purement visuel, Fisher-Yates sur les boutons du DOM.
+//   ◈ Cadeau    — pieces → revele une case correcte en cyan (verrouilee).
+//                 La lettre est retiree de la banque. Cout double a chaque achat.
+//   ✂ Suppr     — pieces → supprime un leurre detecete par exces de frequence.
+//                 Cout double a chaque achat.
+//
+// Principe "faisabilite avant depense" : on verifie qu'une action est possible
+// AVANT d'appeler spendCoins(). Cela evite tout remboursement, ce qui garderait
+// l'invariant anti-triche sessionEarned - sessionSpent propre.
 
 // Met a jour l'etat desactive/actif et le cout affiche des deux boutons bonus.
 // Appele apres chaque changement de pieces, de round ou d'etat de partie.

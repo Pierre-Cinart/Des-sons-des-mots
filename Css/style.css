@@ -607,11 +607,19 @@ img {
 }
 
 .feedback-zone--cheat {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  width: calc(100% - 48px);
+  max-width: 600px;
   border-color: rgba(255, 79, 116, 0.72) !important;
   background: rgba(255, 79, 116, 0.18) !important;
   color: #ff4f74 !important;
   font-weight: 700;
-  animation: cheat-pulse 0.6s ease 2;
+  font-size: 1.1em;
+  animation: cheat-pulse 0.6s ease 4;
 }
 
 @keyframes cheat-pulse {
