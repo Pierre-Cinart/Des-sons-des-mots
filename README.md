@@ -13,52 +13,50 @@ une version plus propre, plus accessible et plus difficile a tricher.
 - Faire deviner un mot a partir d'indices audio.
 - Garder une base technique simple, sans framework obligatoire.
 - Ameliorer progressivement le code et l'experience utilisateur.
-- Ajouter une premiere couche anti-triche cote frontend, en attendant un futur
-  backend.
+- Ajouter une couche anti-triche cote frontend, en attendant un futur backend.
 
 ## Etat actuel
 
-Le jeu fonctionne avec une structure tres directe :
+Le jeu fonctionne avec une structure claire :
 
 - `index.html` : structure de la page et elements de jeu.
 - `Js/app.js` : logique principale du jeu.
+- `Js/levels-data.js` : donnees des niveaux (IDs neutres + mots encodes).
 - `Scss/style.scss` : source des styles.
 - `Css/style.css` : CSS compile.
-- `Audio/` : sons classes par mot.
+- `Audio/` : sons classes par identifiant neutre (s001 a s014).
 - `Images/` : images d'interface.
 
 La version actuelle est une beta pedagogique inspiree de l'univers Pawat Labz.
 Elle propose deja :
 
-- un menu de jeu avec infos et credits ;
+- un menu de jeu avec infos, credits et aide en cours de partie ;
 - un compteur de pieces local ;
-- trois pistes audio, dont deux a deverrouiller avec des pieces ;
+- trois pistes audio dont deux a deverrouiller avec des pieces ;
 - une recompense aleatoire de 1 a 5 pieces apres une bonne reponse ;
 - une animation de coffre avant de passer au niveau suivant ;
-- une premiere couche de brouillage frontend pour les pieces et le mot courant.
-
-De nombreuses mises a jour sont encore prevues, notamment pour les bonus,
-l'equilibrage, la sauvegarde et le futur backend.
+- un bouton QUITTER pour revenir au menu sans recharger la page ;
+- un brouillage anti-triche frontend : dossiers audio neutres et mots encodes.
 
 ## Limite anti-triche actuelle
 
-Le jeu tourne entierement dans le navigateur. Cela signifie qu'une securite
-parfaite n'est pas possible cote frontend : tout ce qui est envoye au navigateur
-peut etre inspecte par un utilisateur motive.
+Le jeu tourne entierement dans le navigateur. Une securite parfaite n'est pas
+possible cote frontend : tout ce qui est envoye au navigateur peut etre inspecte
+par un utilisateur motive.
 
-L'objectif de la prochaine etape n'est donc pas de rendre la triche impossible,
-mais de brouiller les pistes :
+Ce qui est en place :
 
-- eviter une variable globale contenant la bonne reponse en clair ;
-- eviter les chemins audio qui revelent directement le mot ;
-- stocker les reponses sous une forme encodee ou chiffree legerement ;
-- decoder seulement au moment de verifier la proposition du joueur ;
-- reduire les fonctions globales accessibles depuis la console ;
-- retirer les logs inutiles en production.
+- les dossiers audio portent des identifiants neutres (s001, s002...) qui ne
+  revelent pas la reponse dans les requetes reseau ou l'inspecteur de fichiers ;
+- les mots sont stockes encodes en XOR + base64 dans `levels-data.js` ;
+- le decodage ne se fait qu'au moment de preparer le niveau, le resultat etant
+  immediatement re-encode dans une cellule brouillee locale ;
+- les pieces sont stockees de la meme maniere, avec verification d'integrite ;
+- aucun `console.log` ni variable globale accidentelle ne trainent en production.
 
-Une protection plus serieuse sera prevue plus tard avec un backend : validation
-serveur, sessions, score signe, limitation des tentatives et reponses jamais
-envoyees directement en clair.
+Une protection plus serieuse sera ajoutee avec le backend : validation serveur,
+sessions, score signe, limitation des tentatives et reponses jamais envoyees
+au client en clair.
 
 ## Direction de refonte
 
@@ -78,7 +76,7 @@ mais de rendre chaque partie plus claire :
 ### Etape 1 - Base HTML et interactions
 
 - Remplacement des interactions inline par des listeners JavaScript.
-- Creation de zones plus lisibles pour le menu, les sons, la reponse, les lettres
+- Creation de zones lisibles pour le menu, les sons, la reponse, les lettres
   et le feedback.
 - Ajout de vrais boutons pour preparer l'accessibilite clavier.
 
@@ -99,23 +97,73 @@ mais de rendre chaque partie plus claire :
 - Arret automatique du son d'indice quand le mot est trouve.
 - Amelioration du panneau `Infos` pour expliquer les regles des le debut.
 - Correction du pictogramme lecture pour garder le triangle centre dans son cercle.
-- Alignement de l'icone de piece juste apres les nombres dans le compteur et les
-  couts de deverrouillage.
+- Alignement de l'icone de piece dans le compteur et les couts de deverrouillage.
 - Masquage du plateau tant que le menu de demarrage est ouvert.
-- Ajout d'une phrase courte sous le titre du menu pour presenter le principe.
 - Ajout d'un bouton d'aide `?` en jeu avec un panneau fermable par une croix.
 
 ### Etape 4 - Alignement UI et bouton Quitter
 
-- Ancrage du bouton d'aide `?` a l'extreme droite de la barre de statut via
-  `position: absolute` : le niveau et les pieces restent centres sans etre
-  decales par le bouton.
+- Ancrage du bouton `?` a l'extreme droite de la barre de statut via
+  `position: absolute` : le niveau et les pieces restent centres.
 - Ajout d'un bouton `QUITTER` sous la zone de feedback, visible uniquement
   pendant une partie active (attribut HTML `hidden` gere cote JavaScript).
 - La fonction `quitGame()` remet a zero dans l'ordre : audio, compteurs, plateau,
   mot brouille, etat de partie, puis retourne au menu.
 - Commentaires de code en mode tutoriel : chaque etape de `quitGame()` est
   documentee pour rendre la logique lisible dans l'historique git.
+- Police des boutons de lettres changee d'Orbitron vers Exo 2 pour une
+  meilleure lisibilite sur les petites touches.
+
+### Etape 6 - Systeme de difficulte, anti-repetition et records
+
+- Restructuration des dossiers audio en trois tiers : `Audio/easy/` (sons
+  actuels), `Audio/medium/` et `Audio/hard/` (vides, prets pour de futurs sons).
+  Chaque `folderId` dans `levels-data.js` inclut maintenant le tier :
+  `"easy/s004"` → `Audio/easy/s004/0.ogg`.
+- Selection par difficulte dans `app.js` : la fonction `getDifficultyTier()`
+  retourne le tier selon le niveau courant (easy 1-5, medium 6-15, hard 16+).
+  Si un tier est vide, repli automatique sur easy via `getLevelPool()`.
+- Anti-repetition par session : `sessionUsed` (Set) memorise les niveaux
+  joues. `buildAvailablePool()` filtre systematiquement les sons deja entendus
+  dans la partie en cours. Reinitialise uniquement au clic JOUER.
+- Records en cache localStorage : `updateBestStats()` conserve le niveau max
+  et les pieces max atteints. `renderBestStats()` les affiche dans le menu de
+  demarrage des la deuxieme partie (masques tant qu'aucun record n'existe).
+- `getTotalLevelCount()` dans `levels-data.js` compte les niveaux totaux pour
+  declarer la fin de partie quand tout a ete joue.
+
+### Etape 5 - Module de donnees et anti-triche audio
+
+- Creation de `Js/levels-data.js` : module independant qui centralise la table
+  des niveaux. Chaque entree contient un `folderId` neutre et un mot encode
+  en XOR + base64. Aucun mot en clair n'apparait dans le fichier.
+- Renommage de tous les dossiers `Audio/` : les noms de mots sont remplaces
+  par des identifiants neutres (`s001/` a `s014/`). Les requetes reseau
+  n'exposent plus la reponse.
+- Mise a jour de `app.js` : `prepareAudioSources()` utilise le `folderId`
+  neutre ; `setCurrentWord()` decode le payload du niveau puis re-encode
+  le mot dans la cellule brouillee locale.
+- La fonction `decodeLevel()` dans `levels-data.js` est le seul point de
+  decodage : appelee uniquement pendant la preparation du niveau, le resultat
+  est immediatement re-encode. Aucun mot ne reste en clair en memoire.
+- Audit qualite confirme : zero `console.log`, zero `onclick` inline, zero
+  `var`, variable `rdm` correctement locale.
+- Mise a jour complete de la save `des-sons-des-mots-progress.json` et du
+  bloc de progression dans `todo.html`.
+
+### Etape 7 - Melange audio et ecran felicitations
+
+- Melange aleatoire des trois pistes audio a chaque niveau (algorithme Fisher-Yates
+  dans `prepareAudioSources()`) : Signal 01, 02 et 03 ne correspondent plus
+  toujours aux memes fichiers, rejouer le meme mot ne garantit plus le meme son
+  sur le premier signal.
+- Remplacement du `alert()` de fin de session par un vrai ecran HTML :
+  `#congratsOverlay` avec kicker, titre, statistiques finales (niveau et pieces),
+  invitation a contacter Pawat Labz et deux boutons RECOMMENCER / QUITTER.
+- Theme vert neon / cyan pour distinguer visuellement la victoire (felicitations)
+  de la defaite (game over en rouge).
+- `showCongrats()` / `hideCongrats()` symetriques a `showGameOver()` / `hideGameOver()`.
+- `restartGame()` et `quitGame()` ferment desormais les deux overlays de fin.
 
 ## Lancer le jeu
 
@@ -135,19 +183,32 @@ python -m http.server
 
 Puis ouvrir l'adresse locale indiquee par le terminal.
 
-## Ajouter un mot plus tard
+## Ajouter un mot
 
-La structure cible sera documentee pendant la refonte. A terme, l'ajout d'un mot
-devra suivre une procedure simple :
+1. Placer les fichiers audio dans un nouveau dossier `Audio/sXXX/` (0.ogg,
+   1.ogg, 2.ogg).
+2. Calculer l'encodage du mot avec la commande suivante (remplacer MOT) :
 
-1. Ajouter les fichiers audio dans un dossier a id neutre.
-2. Ajouter une entree de niveau dans les donnees du jeu.
-3. Encoder la reponse avec l'outil ou la fonction prevue.
-4. Tester que les sons, les lettres et la validation fonctionnent.
+```bash
+node -e "
+const s='pawat-labz-audio-demo', w='MOT';
+const c=[];
+for(let i=0;i<w.length;i++) c.push(String.fromCharCode(w.charCodeAt(i)^s.charCodeAt(i%s.length)));
+console.log(Buffer.from(c.join('')).toString('base64'));
+"
+```
+
+3. Ajouter une entree dans le tableau `LEVELS` de `Js/levels-data.js` :
+
+```javascript
+{ folderId: "sXXX", encoded: "RESULTAT_DE_LA_COMMANDE" }
+```
+
+4. Tester que le son se joue, les lettres s'affichent et la validation fonctionne.
 
 ## Roadmap
 
-La feuille de route detaillee est maintenant disponible sous deux formes :
+La feuille de route detaillee est disponible sous deux formes :
 
 - `todo.html` : checklist cliquable avec sauvegarde locale et export/import JSON.
 - `Data/todo-roadmap.json` : source de donnees de la roadmap.

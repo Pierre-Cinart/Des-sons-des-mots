@@ -30,6 +30,16 @@
                 Demo pedagogique Pawat Labz. Trouve le mot, gagne des pieces et debloque plus d'indices audio.
             </p>
 
+            <!-- Records de la session precedente, affiches uniquement si au moins
+                 une partie a ete jouee (masque par defaut, gere par renderBestStats) -->
+            <div id="bestStats" class="start-menu__best-stats" hidden>
+                <span>Record : niveau <strong id="bestLevel">0</strong></span>
+                <span class="best-stats__sep" aria-hidden="true">·</span>
+                <span>Pieces max : <strong id="bestCoins">0</strong>
+                    <img class="coin-status__icon" src="Images/coins.webp" alt="" aria-hidden="true">
+                </span>
+            </div>
+
             <div class="start-menu__actions">
                 <button class="_btn" type="button" data-start-game>
                     JOUER
@@ -118,7 +128,33 @@
 
         <section class="letters-zone" aria-label="Lettres disponibles">
             <div id="letters" class="letter-bank"></div>
+            <div class="letter-controls">
+                <button id="shuffleButton" class="letter-ctrl-btn" type="button" aria-label="Mélanger les lettres">
+                    ↺ Mélanger
+                </button>
+                <button id="bonusLetterButton" class="letter-ctrl-btn letter-ctrl-btn--gold" type="button" aria-label="Cadeau : révéler une lettre">
+                    ◈ Cadeau — <span id="bonusLetterCostDisplay">5</span><img class="coin-status__icon" src="Images/coins.webp" alt="pièces" aria-hidden="true">
+                </button>
+                <button id="bonusSupButton" class="letter-ctrl-btn letter-ctrl-btn--orange" type="button" aria-label="Supprimer une lettre inutile">
+                    ✂ Suppr lettre — <span id="bonusSupCostDisplay">5</span><img class="coin-status__icon" src="Images/coins.webp" alt="pièces" aria-hidden="true">
+                </button>
+            </div>
         </section>
+
+        <!-- Zone de validation et de vies, visible pendant une manche active.
+             Les vies representent le total d'erreurs autorises sur toute la partie.
+             Le bouton VALIDER declenche la verification de la reponse.
+             Si la reponse est incomplete, la zone de reponse tremble. -->
+        <div id="actionZone" class="action-zone" hidden>
+            <div id="livesBar" class="lives-bar" aria-live="polite" aria-label="Vies restantes">
+                <span class="lives-bar__label">VIES</span>
+                <span id="livesIcons" class="lives-bar__icons" aria-hidden="true"></span>
+            </div>
+            <button id="validateButton" class="_btn _btn--validate" type="button"
+                    aria-label="Valider la reponse">
+                VALIDER
+            </button>
+        </div>
 
         <p id="feedback" class="feedback-zone" aria-live="polite"></p>
 
@@ -149,6 +185,66 @@
         </div>
     </section>
 
+    <!-- Overlay felicitations : s'affiche quand tous les mots ont ete trouves.
+         Affiche le score final, une invitation a envoyer des idees et deux actions. -->
+    <section id="congratsOverlay" class="congrats-overlay" aria-label="Felicitations" hidden>
+        <div class="congrats-panel" role="dialog" aria-modal="true" aria-labelledby="congratsTitle">
+            <p class="congrats-panel__kicker">Session complete</p>
+            <h2 id="congratsTitle">FELICITATIONS !</h2>
+            <p class="congrats-panel__msg">Tu as trouve tous les mots !</p>
+            <div class="congrats-stats">
+                <div class="congrats-stat">
+                    <span class="congrats-stat__label">Niveau atteint</span>
+                    <strong id="congratsLevel">0</strong>
+                </div>
+                <div class="congrats-stat">
+                    <span class="congrats-stat__label">Pieces</span>
+                    <strong id="congratsCoins">0</strong>
+                    <img src="Images/coins.webp" alt="pieces" class="gameover-coin-icon">
+                </div>
+            </div>
+            <p class="congrats-panel__contact">
+                Des idees pour le jeu ? Ecris a<br>
+                <a href="mailto:pawat.contact@gmail.com" class="congrats-contact-link">
+                    pawat.contact@gmail.com
+                </a>
+            </p>
+            <div class="congrats-actions">
+                <button id="congratsRestart" class="_btn" type="button">RECOMMENCER</button>
+                <button id="congratsQuit" class="_btn _btn--quit" type="button">QUITTER</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overlay game over : s'affiche apres 3 erreurs.
+         Affiche le niveau atteint et les pieces accumulees.
+         Propose deux actions : recommencer une partie fraiche ou quitter au menu. -->
+    <section id="gameOverOverlay" class="gameover-overlay" aria-label="Fin de partie" hidden>
+        <div class="gameover-panel" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle">
+            <p class="gameover-panel__kicker">Session terminee</p>
+            <h2 id="gameOverTitle">GAME OVER</h2>
+            <div class="gameover-stats">
+                <div class="gameover-stat">
+                    <span class="gameover-stat__label">Niveau atteint</span>
+                    <strong id="gameOverLevel">0</strong>
+                </div>
+                <div class="gameover-stat">
+                    <span class="gameover-stat__label">Pieces</span>
+                    <strong id="gameOverCoins">0</strong>
+                    <img src="Images/coins.webp" alt="pieces" class="gameover-coin-icon">
+                </div>
+            </div>
+            <div class="gameover-actions">
+                <button id="gameOverRestart" class="_btn" type="button">
+                    RECOMMENCER
+                </button>
+                <button id="gameOverQuit" class="_btn _btn--quit" type="button">
+                    QUITTER
+                </button>
+            </div>
+        </div>
+    </section>
+
     <section id="helpOverlay" class="help-overlay" aria-label="Aide du jeu" hidden>
         <div class="help-panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
             <button id="helpClose" class="help-panel__close" type="button" aria-label="Fermer l'aide">
@@ -161,11 +257,15 @@
                 <li>Devine le mot cache avec les lettres proposees.</li>
                 <li>Clique sur une lettre en bas pour l'ajouter dans la reponse.</li>
                 <li>Clique sur une lettre deja posee dans le mot pour la retirer et corriger.</li>
+                <li>Quand toutes les cases sont remplies, clique sur <strong>VALIDER</strong> pour soumettre ta reponse. Tu as 3 tentatives.</li>
+                <li>Apres une bonne reponse, clique sur le coffre ou sur le <strong>?</strong> pour reveler ton gain.</li>
                 <li>Gagne des pieces avec le coffre, puis utilise-les pour deverrouiller les signaux 02 et 03.</li>
             </ul>
         </div>
     </section>
 
+    <!-- levels-data.js doit etre charge avant app.js : il expose LEVELS et decodeLevel() -->
+    <script type="text/javascript" src="./Js/levels-data.js"></script>
     <script type="text/javascript" src="./Js/app.js"></script>
 </body>
 </html>
