@@ -1,0 +1,16 @@
+{
+  "project": "Des sons et des mots",
+  "roadmapVersion": "0.1.0-roadmap",
+  "exportedAt": "2026-05-20T09:41:08.677Z",
+  "progress": {
+    "base-branch": true,
+    "base-docs": true,
+    "base-run": true,
+    "html-title": true,
+    "html-id-sounds": true,
+    "html-buttons": true,
+    "html-audio-buttons": true,
+    "html-info": true,
+    "html-zones": true
+  }
+}

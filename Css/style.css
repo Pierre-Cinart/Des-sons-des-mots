@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -5,94 +7,185 @@
   user-select: none;
 }
 
+html {
+  min-width: 320px;
+  background: #050709;
+}
+
 body {
   position: relative;
   width: 100%;
-  min-width: 290px;
+  min-width: 320px;
   min-height: 100vh;
-  background-color: blue;
+  overflow-x: hidden;
+  color: #cfe7d7;
+  font-family: "Exo 2", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent 32%), radial-gradient(circle at left center, rgba(0, 255, 65, 0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(255, 107, 53, 0.07), transparent 26%), #050709;
 }
 
 button {
   font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.background-grid,
+.scan-line {
+  position: fixed;
+  pointer-events: none;
+}
+
+.background-grid {
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(rgba(0, 255, 65, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 65, 0.035) 1px, transparent 1px);
+  background-size: 46px 46px;
+  opacity: 0.55;
+}
+
+.scan-line {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.32), transparent);
+  animation: scan-line 8s linear infinite;
 }
 
 .game-status {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: center;
-  gap: 18px;
-  width: 100%;
-  padding: 6px 10px;
-  background-color: black;
-  color: yellow;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: min(940px, calc(100% - 24px));
+  margin: 14px auto 0;
+  padding: 10px;
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  border-radius: 999px;
+  background: rgba(10, 18, 28, 0.78);
+  box-shadow: 0 0 18px rgba(0, 255, 65, 0.12);
+  color: #86a691;
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.game-status span {
+  color: #ffd166;
+  text-shadow: 0 0 12px rgba(255, 209, 102, 0.24);
 }
 
 .game-screen {
   position: relative;
-  width: 100%;
-  min-height: 100vh;
-  margin: auto;
-  border: 1px solid black;
-  background-color: black;
-  min-width: 290px;
-  padding-bottom: 24px;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  width: min(1040px, calc(100% - 24px));
+  min-height: calc(100vh - 72px);
+  margin: 14px auto 0;
+  padding: 18px 0 32px;
 }
 
 .start-menu {
-  width: 90%;
-  max-width: 420px;
-  min-height: 300px;
   position: absolute;
   z-index: 10;
-  top: 30%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, 0%);
-  padding: 28px 18px;
-  background-color: rgba(52, 61, 60, 0.94);
-  border-radius: 24px;
-  border: 1px solid white;
+  width: min(92%, 520px);
+  min-height: 330px;
+  padding: 30px 22px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 255, 65, 0.42);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(15, 22, 32, 0.97), rgba(5, 7, 9, 0.94)), rgba(15, 22, 32, 0.95);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.48), 0 0 28px rgba(0, 255, 65, 0.16);
   text-align: center;
 }
 
+.start-menu::before {
+  content: "AUDIO LAB / SESSION";
+  display: inline-flex;
+  margin-bottom: 14px;
+  color: #00d4ff;
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .start-menu h1 {
+  margin: 0 auto 22px;
+  color: #effff2;
+  font-family: "Orbitron", "Share Tech Mono", monospace;
+  font-size: clamp(2rem, 8vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(0, 255, 65, 0.18);
+}
+
+.start-menu__tagline {
+  max-width: 420px;
   margin: 0 auto 18px;
+  color: #86a691;
+  line-height: 1.5;
 }
 
 .start-menu__actions {
-  display: grid;
+  display: flex;
   justify-content: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 ._btn {
-  margin: auto;
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  font-weight: bolder;
-  width: 120px;
-  min-height: 36px;
-  color: white;
-  background-color: gray;
-  border: 1px solid black;
+  justify-content: center;
+  min-width: 128px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(0, 255, 65, 0.28);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 255, 65, 0.17), rgba(0, 212, 255, 0.13));
+  color: #effff2;
+  box-shadow: 0 0 14px rgba(0, 255, 65, 0.18);
   cursor: pointer;
-  scale: 0.95;
-  transition-duration: 0.25s;
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 }
 
 ._btn:hover,
 ._btn:focus-visible {
   outline: none;
-  scale: 1;
-  transition-duration: 0.25s;
-  border-color: yellow;
+  transform: translateY(-1px);
+  border-color: #00ff41;
+  color: #00ff41;
+  box-shadow: 0 0 24px rgba(0, 255, 65, 0.28);
 }
 
 .info-panel {
-  margin-top: 18px;
-  color: white;
-  font-size: 1rem;
-  line-height: 1.4;
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 12px;
+  background: rgba(0, 212, 255, 0.06);
+  color: #86a691;
+  font-size: 0.96rem;
+  line-height: 1.5;
 }
 
 .info-panel p {
@@ -100,53 +193,116 @@ button {
 }
 
 .sound-panel {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-  width: 90%;
-  min-width: 290px;
-  max-width: 680px;
-  min-height: 52vh;
-  margin: 5px auto;
-  border: 1px solid yellow;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(92px, 1fr));
+  gap: 14px;
+  align-items: stretch;
+  width: 100%;
+  min-height: 320px;
+  padding: 18px;
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 18px;
+  background: rgba(10, 14, 20, 0.76);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
 }
 
 .sound-button {
-  width: 128px;
-  height: 128px;
-  padding: 0;
-  border: 1px solid yellow;
-  border-radius: 50%;
-  background: transparent;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  padding: 20px;
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(0, 255, 65, 0.06), rgba(0, 212, 255, 0.035)), rgba(8, 12, 18, 0.88);
+  box-shadow: inset 0 0 26px rgba(0, 255, 65, 0.04);
   cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.sound-button::before {
+  content: "SIGNAL";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #00d4ff;
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+}
+
+.sound-button__label,
+.sound-button__price {
+  position: absolute;
+  left: 14px;
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  text-transform: uppercase;
+}
+
+.sound-button__label {
+  bottom: 40px;
+  color: #effff2;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+
+.sound-button__price {
+  bottom: 14px;
+  color: #ffd166;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
 }
 
 .sound-button:hover,
 .sound-button:focus-visible {
   outline: none;
-  border: 1px solid green;
+  transform: translateY(-2px);
+  border-color: #00ff41;
+  box-shadow: 0 0 22px rgba(0, 255, 65, 0.2), inset 0 0 32px rgba(0, 212, 255, 0.05);
+}
+
+.sound-button--locked {
+  border-color: rgba(255, 209, 102, 0.24);
+}
+
+.sound-button--locked img {
+  border-color: rgba(255, 209, 102, 0.28);
+  background: rgba(255, 209, 102, 0.06);
+  filter: grayscale(0.2) drop-shadow(0 0 10px rgba(255, 209, 102, 0.16));
+}
+
+.sound-button--ready {
+  border-color: rgba(255, 209, 102, 0.55);
+  box-shadow: 0 0 24px rgba(255, 209, 102, 0.12), inset 0 0 28px rgba(255, 209, 102, 0.04);
 }
 
 .sound-button img {
-  width: 100%;
-  height: 100%;
-  display: block;
+  width: clamp(76px, 12vw, 116px);
+  height: clamp(76px, 12vw, 116px);
+  padding: 18px;
+  border: 1px solid rgba(0, 255, 65, 0.36);
   border-radius: 50%;
+  background: rgba(0, 255, 65, 0.08);
+  filter: drop-shadow(0 0 14px rgba(0, 255, 65, 0.22));
+}
+
+.answer-slots,
+.letter-bank,
+.feedback-zone {
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  border-radius: 14px;
+  background: rgba(10, 14, 20, 0.92);
 }
 
 .answer-slots {
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2px;
-  width: 90%;
-  max-width: 400px;
-  min-height: 34px;
-  margin: 10px auto;
-  background-color: yellow;
-  border-radius: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  min-height: 74px;
+  padding: 14px;
 }
 
 .letterEmpty,
@@ -154,66 +310,99 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
-  background-color: wheat;
-  border: 1px solid yellow;
+  color: #effff2;
+  background: rgba(15, 22, 32, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  font-family: "Orbitron", "Share Tech Mono", monospace;
   font-weight: 900;
   cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .letterEmpty {
-  width: 30px;
-  height: 30px;
-  border: 0;
+  width: 42px;
+  height: 42px;
+  color: #ffd166;
 }
 
 .letterEmpty--good {
-  background-color: green;
-  color: white;
+  border-color: rgba(0, 255, 65, 0.62);
+  background: rgba(0, 255, 65, 0.18);
+  color: #00ff41;
 }
 
 .letterEmpty--wrong {
-  background-color: red;
-  color: white;
+  border-color: rgba(255, 79, 116, 0.72);
+  background: rgba(255, 79, 116, 0.16);
+  color: #ff4f74;
 }
 
 .letter-bank {
-  cursor: pointer;
-  width: 75%;
-  max-width: 230px;
-  margin: 40px auto;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  width: 100%;
+  min-height: 150px;
+  padding: 16px;
   text-align: center;
 }
 
 .letter {
-  width: 40px;
-  height: 40px;
-  border-radius: 10%;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
 }
 
 .letter:hover,
 .letter:focus-visible,
 .letterEmpty:hover,
 .letterEmpty:focus-visible {
-  outline: 2px solid white;
-  outline-offset: 2px;
+  outline: none;
+  transform: translateY(-1px);
+  border-color: #00ff41;
+  box-shadow: 0 0 16px rgba(0, 255, 65, 0.18);
 }
 
 .feedback-zone {
-  min-height: 24px;
-  width: 90%;
-  max-width: 520px;
-  margin: 12px auto 0;
-  color: white;
+  min-height: 46px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 16px;
+  color: #86a691;
+  font-family: "Share Tech Mono", "Courier New", monospace;
   text-align: center;
-  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .displayNone {
   display: none;
+}
+
+@keyframes scan-line {
+  from {
+    transform: translateY(-2px);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+@media (max-width: 720px) {
+  .game-screen {
+    gap: 12px;
+    width: min(calc(100% - 16px), 1040px);
+  }
+  .sound-panel {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .sound-button {
+    min-height: 118px;
+  }
+  .start-menu {
+    top: 48%;
+    padding: 24px 16px;
+  }
 }

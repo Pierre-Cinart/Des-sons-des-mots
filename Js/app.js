@@ -1,6 +1,6 @@
-// Etape 1 : nettoyage sans refonte complete du gameplay.
-// Objectif : remplacer les evenements inline par des listeners JS, corriger les ids
-// et utiliser de vrais boutons pour preparer l'accessibilite des prochaines etapes.
+// Etape 2 : economie de pieces locale, menu enrichi et brouillage simple des donnees.
+// Le but n'est pas de rendre la triche impossible en front, mais de cacher les donnees
+// sensibles les plus evidentes pour eviter la lecture immediate en console.
 
 // Recuperation des elements fixes du DOM.
 const infoBar = document.querySelector("#infoBar");
@@ -11,6 +11,16 @@ const lettersEmpty = document.querySelector("#lettersEmpty");
 const letters = document.querySelector("#letters");
 const feedback = document.querySelector("#feedback");
 const levelValue = document.querySelector("#levelValue");
+const coinValue = document.querySelector("#coinValue");
+const soundButtons = Array.from(sounds.querySelectorAll("[data-sound-index]"));
+const panelToggles = {
+    info: document.querySelectorAll("[data-toggle-info]"),
+    credits: document.querySelectorAll("[data-toggle-credits]")
+};
+const panels = {
+    info: document.querySelector("#infoTxt"),
+    credits: document.querySelector("#creditsTxt")
+};
 
 // Variables audio.
 let audio = new Audio();
@@ -18,13 +28,19 @@ let audioTxt = "";
 let isPlaying = false;
 let fx = new Audio();
 let audioSources = [];
+let audioContext = null;
 
 // Variables d'environnement.
 const maxLetters = 12;
+const soundCosts = [0, 15, 30];
+const rewardTable = [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 5];
+const obfuscationSalt = "pawat-labz-audio-demo";
+const integritySalt = "des-sons-des-mots";
 
 let randomList = [];
 let game = false;
 let currentLevel = 0;
+let unlockedSounds = [true, false, false];
 
 const alphabet = [
     "A", "A", "A", "B", "C", "C", "C",
@@ -39,29 +55,37 @@ const alphabet = [
 ];
 
 let words = []; // Tableau des mots encore disponibles.
-let word = ""; // Mot a trouver. Il sera cache plus tard pendant l'etape anti-triche.
+let secureWord = createSecureCell(""); // Mot cache dans une cellule brouillee.
+let secureCoins = createSecureCell(0); // Pieces conservees dans une cellule brouillee.
 
 // Initialise la partie au premier lancement.
 function init() {
     fx.src = "./Audio/fx/click.mp3";
-    words = [
-        "abeille", "avion", "bagarre", "canard", "cartoon", "cochon", "cuisine",
-        "dauphin", "dinde", "enfant", "ferme", "hymne", "monstre", "oie"
-    ];
+    resetWordPool();
 
     menu.classList.add("displayNone");
     setFeedback("");
+    setCoins(0);
+    updateCoinDisplay();
 }
 
 // Lance une nouvelle manche.
 function newGame() {
+    if (!ensureSecureState("demarrage")) {
+        return;
+    }
+
     if (!game) {
         init();
     }
 
+    if (words.length === 0) {
+        resetWordPool();
+    }
+
     clearRound();
 
-    word = randomWord(words);
+    setCurrentWord(randomWord(words));
     currentLevel += 1;
     levelValue.textContent = String(currentLevel);
 
@@ -69,6 +93,7 @@ function newGame() {
     prepareAudioSources();
     renderAvailableLetters();
     renderAnswerSlots();
+    updateSoundButtons();
 
     game = true;
 }
@@ -78,6 +103,7 @@ function clearRound() {
     letters.replaceChildren();
     lettersEmpty.replaceChildren();
     setFeedback("");
+    unlockedSounds = [true, false, false];
 
     audio.pause();
     audio.currentTime = 0;
@@ -88,13 +114,17 @@ function clearRound() {
 // Prepare les trois sons du mot actif.
 // Cette logique sera remplacee plus tard par des ids neutres pour brouiller les pistes.
 function prepareAudioSources() {
+    const currentWord = getCurrentWord();
+
     for (let i = 0; i < 3; i += 1) {
-        audioSources[i] = "./Audio/" + word + "/" + i + ".ogg";
+        audioSources[i] = "./Audio/" + currentWord + "/" + i + ".ogg";
     }
 }
 
 // Place aleatoirement les lettres du mot dans la banque de lettres.
 function placeLetters() {
+    const currentWord = getCurrentWord();
+
     randomList = [];
     const maxRandom = [];
 
@@ -102,7 +132,7 @@ function placeLetters() {
         maxRandom[i] = i;
     }
 
-    for (let i = 0; i < word.length; i += 1) {
+    for (let i = 0; i < currentWord.length; i += 1) {
         const rdm = Math.trunc(Math.random() * maxRandom.length);
         randomList[i] = maxRandom[rdm];
         maxRandom.splice(rdm, 1);
@@ -139,9 +169,11 @@ function renderAvailableLetters() {
 
 // Recupere la bonne lettre si la position correspond au mot, sinon cree un leurre.
 function getLetterForPosition(position) {
+    const currentWord = getCurrentWord();
+
     for (let j = 0; j < randomList.length; j += 1) {
         if (position === randomList[j]) {
-            return word[j].toUpperCase();
+            return currentWord[j].toUpperCase();
         }
     }
 
@@ -150,7 +182,9 @@ function getLetterForPosition(position) {
 
 // Cree les emplacements vides de la reponse.
 function renderAnswerSlots() {
-    for (let i = 0; i < word.length; i += 1) {
+    const currentWord = getCurrentWord();
+
+    for (let i = 0; i < currentWord.length; i += 1) {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "letterEmpty";
@@ -166,6 +200,14 @@ function renderAnswerSlots() {
 function playSound(nb) {
     if (!game) {
         setFeedback("Lance une partie avant de jouer un son.");
+        return;
+    }
+
+    if (!ensureSecureState("lecture-audio")) {
+        return;
+    }
+
+    if (!unlockSound(nb)) {
         return;
     }
 
@@ -245,10 +287,11 @@ function clearWrongAnswerState() {
 
 // Compare la proposition du joueur avec le mot courant.
 function testWord() {
+    const currentWord = getCurrentWord();
     let good = true;
 
     for (let i = 0; i < lettersEmpty.children.length; i += 1) {
-        if (lettersEmpty.children[i].textContent !== word[i].toUpperCase()) {
+        if (lettersEmpty.children[i].textContent !== currentWord[i].toUpperCase()) {
             good = false;
         }
     }
@@ -267,7 +310,9 @@ function handleGoodAnswer() {
         lettersEmpty.children[i].classList.add("letterEmpty--good");
     }
 
-    setFeedback("Bonne reponse !");
+    const reward = rollCoinReward();
+    addCoins(reward);
+    setFeedback("Bonne reponse ! +" + reward + " piece" + (reward > 1 ? "s" : "") + ".");
 
     if (words.length >= 1) {
         fx.currentTime = 0;
@@ -280,8 +325,8 @@ function handleGoodAnswer() {
 
     alert(
         "Vous avez trouve tous les mots.\n" +
-        "Cette application est en cours de developpement.\n" +
-        "Pour toute suggestion, rendez-vous sur https://cinartdev.fr rubrique contact."
+        "Cette demo Pawat Labz est en cours de developpement.\n" +
+        "Le systeme de sauvegarde arrivera avec la mise en ligne."
     );
 }
 
@@ -298,20 +343,251 @@ function setFeedback(message) {
     feedback.textContent = message;
 }
 
-function showInfo() {
-    const isHidden = infoTxt.hidden;
-    infoTxt.hidden = !isHidden;
+function togglePanel(panelName) {
+    const selectedPanel = panels[panelName];
+    const isHidden = selectedPanel.hidden;
 
-    document.querySelectorAll("[data-toggle-info]").forEach((button) => {
-        button.setAttribute("aria-expanded", String(isHidden));
+    Object.keys(panels).forEach((name) => {
+        const shouldOpen = name === panelName ? isHidden : false;
+        panels[name].hidden = !shouldOpen;
+        panelToggles[name].forEach((button) => {
+            button.setAttribute("aria-expanded", String(shouldOpen));
+        });
+    });
+}
+
+function createSecureCell(initialValue) {
+    return encodeValue(initialValue);
+}
+
+function encodeValue(value) {
+    const clearValue = String(value);
+    const maskedChars = [];
+
+    for (let i = 0; i < clearValue.length; i += 1) {
+        const saltCode = obfuscationSalt.charCodeAt(i % obfuscationSalt.length);
+        maskedChars.push(String.fromCharCode(clearValue.charCodeAt(i) ^ saltCode));
+    }
+
+    return {
+        payload: btoa(maskedChars.join("")),
+        digest: computeDigest(clearValue)
+    };
+}
+
+function decodeValue(cell) {
+    const maskedValue = atob(cell.payload);
+    let clearValue = "";
+
+    for (let i = 0; i < maskedValue.length; i += 1) {
+        const saltCode = obfuscationSalt.charCodeAt(i % obfuscationSalt.length);
+        clearValue += String.fromCharCode(maskedValue.charCodeAt(i) ^ saltCode);
+    }
+
+    if (cell.digest !== computeDigest(clearValue)) {
+        throw new Error("Etat local invalide");
+    }
+
+    return clearValue;
+}
+
+function computeDigest(value) {
+    let total = 0;
+    const raw = integritySalt + "|" + value;
+
+    for (let i = 0; i < raw.length; i += 1) {
+        total = (total + raw.charCodeAt(i) * (i + 3)) % 1000003;
+    }
+
+    return String(total);
+}
+
+function ensureSecureState(source) {
+    try {
+        const coins = Number(decodeValue(secureCoins));
+        const currentWord = decodeValue(secureWord);
+
+        if (!Number.isInteger(coins) || coins < 0) {
+            throw new Error("Pieces invalides");
+        }
+
+        if (game && currentWord.length === 0) {
+            throw new Error("Mot manquant");
+        }
+
+        return true;
+    } catch (error) {
+        currentLevel = 0;
+        levelValue.textContent = "0";
+        secureCoins = encodeValue(0);
+        secureWord = encodeValue("");
+        words = [];
+        game = false;
+        menu.classList.remove("displayNone");
+        updateCoinDisplay();
+        updateSoundButtons();
+        setFeedback("Verification anti-triche activee pendant " + source + ". La session locale a ete reinitialisee.");
+        return false;
+    }
+}
+
+function setCurrentWord(nextWord) {
+    secureWord = encodeValue(nextWord);
+}
+
+function getCurrentWord() {
+    return decodeValue(secureWord);
+}
+
+function setCoins(value) {
+    secureCoins = encodeValue(value);
+}
+
+function getCoins() {
+    return Number(decodeValue(secureCoins));
+}
+
+function addCoins(amount) {
+    setCoins(getCoins() + amount);
+    updateCoinDisplay();
+    updateSoundButtons();
+    playRewardFx(amount);
+}
+
+function spendCoins(amount) {
+    const availableCoins = getCoins();
+
+    if (availableCoins < amount) {
+        return false;
+    }
+
+    setCoins(availableCoins - amount);
+    updateCoinDisplay();
+    updateSoundButtons();
+    return true;
+}
+
+function updateCoinDisplay() {
+    coinValue.textContent = String(getCoins());
+}
+
+function resetWordPool() {
+    words = [
+        "abeille", "avion", "bagarre", "canard", "cartoon", "cochon", "cuisine",
+        "dauphin", "dinde", "enfant", "ferme", "hymne", "monstre", "oie"
+    ];
+}
+
+function rollCoinReward() {
+    return rewardTable[Math.trunc(Math.random() * rewardTable.length)];
+}
+
+function playRewardFx(reward) {
+    if (reward === 5) {
+        playSyntheticReward([880, 1320, 1760], 0.18);
+        return;
+    }
+
+    if (reward >= 4) {
+        playSyntheticReward([660, 990], 0.14);
+        return;
+    }
+
+    fx.currentTime = 0;
+    fx.src = "./Audio/fx/applaudissement.ogg";
+    fx.play();
+}
+
+function playSyntheticReward(frequencies, duration) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+        fx.currentTime = 0;
+        fx.src = "./Audio/fx/applaudissement.ogg";
+        fx.play();
+        return;
+    }
+
+    if (!audioContext) {
+        audioContext = new AudioContextClass();
+    }
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    const startTime = audioContext.currentTime;
+
+    frequencies.forEach((frequency, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        const noteStart = startTime + (index * duration * 0.65);
+        const noteEnd = noteStart + duration;
+
+        oscillator.type = "triangle";
+        oscillator.frequency.setValueAtTime(frequency, noteStart);
+        gainNode.gain.setValueAtTime(0.001, noteStart);
+        gainNode.gain.linearRampToValueAtTime(0.12, noteStart + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, noteEnd);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.start(noteStart);
+        oscillator.stop(noteEnd);
+    });
+}
+
+function unlockSound(index) {
+    if (unlockedSounds[index]) {
+        return true;
+    }
+
+    const cost = soundCosts[index];
+
+    if (!spendCoins(cost)) {
+        setFeedback("Il te faut " + cost + " pieces pour debloquer ce signal.");
+        return false;
+    }
+
+    unlockedSounds[index] = true;
+    updateSoundButtons();
+    setFeedback("Signal " + String(index + 1).padStart(2, "0") + " debloque pour " + cost + " pieces.");
+    return true;
+}
+
+function updateSoundButtons() {
+    const coins = getCoins();
+
+    soundButtons.forEach((button) => {
+        const index = Number(button.dataset.soundIndex);
+        const cost = soundCosts[index];
+        const isUnlocked = unlockedSounds[index];
+        const isAvailable = isUnlocked || coins >= cost;
+
+        button.classList.toggle("sound-button--locked", !isUnlocked);
+        button.classList.toggle("sound-button--ready", !isUnlocked && isAvailable);
+        button.setAttribute(
+            "aria-label",
+            isUnlocked
+                ? "Jouer le son " + String(index + 1)
+                : "Debloquer le son " + String(index + 1) + " pour " + cost + " pieces"
+        );
+
+        const price = button.querySelector(".sound-button__price");
+        price.textContent = isUnlocked ? (cost === 0 ? "Actif" : "Debloque") : (cost === 0 ? "Gratuit" : cost + " pieces");
     });
 }
 
 // Branchement des interactions fixes de la page.
 document.querySelector("[data-start-game]").addEventListener("click", newGame);
-document.querySelectorAll("[data-toggle-info]").forEach((button) => {
-    button.addEventListener("click", showInfo);
+panelToggles.info.forEach((button) => {
+    button.addEventListener("click", () => togglePanel("info"));
+});
+panelToggles.credits.forEach((button) => {
+    button.addEventListener("click", () => togglePanel("credits"));
 });
 sounds.querySelectorAll("[data-sound-index]").forEach((button) => {
     button.addEventListener("click", () => playSound(Number(button.dataset.soundIndex)));
 });
+updateCoinDisplay();
+updateSoundButtons();

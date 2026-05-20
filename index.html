@@ -8,24 +8,20 @@
     <title>Des sons et des mots</title>
 </head>
 <body>
-    <!--
-        Header de partie.
-        Pour l'etape 1, on garde seulement les emplacements utiles :
-        niveau, pieces et messages. Les vraies regles de pieces arriveront plus tard.
-    -->
+    <div class="background-grid" aria-hidden="true"></div>
+    <div class="scan-line" aria-hidden="true"></div>
+
     <header id="infoBar" class="game-status" aria-label="Informations de partie">
         <p>Niveau : <span id="levelValue">0</span></p>
         <p>Pieces : <span id="coinValue">0</span></p>
     </header>
 
-    <!--
-        Ecran principal du jeu.
-        Les zones sont separees des maintenant pour faciliter les prochaines etapes :
-        menu, sons, reponse, lettres et feedback.
-    -->
     <main id="screen" class="game-screen">
         <section id="menu" class="start-menu" aria-labelledby="gameTitle">
-            <h1 id="gameTitle">DES SONS ET DES MOTS</h1>
+            <h1 id="gameTitle">Des Sons &amp; Des Mots</h1>
+            <p class="start-menu__tagline">
+                Demo pedagogique Pawat Labz. Trouve le mot, gagne des pieces et debloque plus d'indices audio.
+            </p>
 
             <div class="start-menu__actions">
                 <button class="_btn" type="button" data-start-game>
@@ -34,30 +30,51 @@
                 <button class="_btn" type="button" data-toggle-info aria-expanded="false" aria-controls="infoTxt">
                     INFOS
                 </button>
+                <button class="_btn" type="button" data-toggle-credits aria-expanded="false" aria-controls="creditsTxt">
+                    CREDITS
+                </button>
             </div>
 
             <aside id="infoTxt" class="info-panel" hidden>
                 <p>
-                    Dans ce jeu vous devez ecouter des sons et en deduire le mot avec les lettres proposees.
+                    Des Sons &amp; Des Mots fait partie de l'univers Pawat Labz.
                 </p>
                 <p>
-                    Ce jeu est en cours de refonte pedagogique.
+                    Cette version est une demo en cours de construction. Elle accueillera un systeme de sauvegarde lors de la mise en ligne.
+                </p>
+                <p>
+                    Le premier son est gratuit. Les indices audio suivants se debloquent avec des pieces gagnees en jouant.
                 </p>
                 <button class="_btn" type="button" data-toggle-info>
+                    Fermer
+                </button>
+            </aside>
+
+            <aside id="creditsTxt" class="info-panel" hidden>
+                <p>
+                    Pawat Labz, tous droits reserves.
+                </p>
+                <button class="_btn" type="button" data-toggle-credits>
                     Fermer
                 </button>
             </aside>
         </section>
 
         <section id="sounds" class="sound-panel" aria-label="Sons disponibles">
-            <button class="sound-button" type="button" data-sound-index="0" aria-label="Jouer le son 1">
+            <button class="sound-button" type="button" data-sound-index="0" data-sound-cost="0" aria-label="Jouer le son 1 gratuit">
                 <img src="Images/play.png" alt="" aria-hidden="true">
+                <span class="sound-button__label">Signal 01</span>
+                <span class="sound-button__price">Gratuit</span>
             </button>
-            <button class="sound-button" type="button" data-sound-index="1" aria-label="Jouer le son 2">
+            <button class="sound-button" type="button" data-sound-index="1" data-sound-cost="15" aria-label="Debloquer le son 2 pour 15 pieces">
                 <img src="Images/play.png" alt="" aria-hidden="true">
+                <span class="sound-button__label">Signal 02</span>
+                <span class="sound-button__price">15 pieces</span>
             </button>
-            <button class="sound-button" type="button" data-sound-index="2" aria-label="Jouer le son 3">
+            <button class="sound-button" type="button" data-sound-index="2" data-sound-cost="30" aria-label="Debloquer le son 3 pour 30 pieces">
                 <img src="Images/play.png" alt="" aria-hidden="true">
+                <span class="sound-button__label">Signal 03</span>
+                <span class="sound-button__price">30 pieces</span>
             </button>
         </section>
 
